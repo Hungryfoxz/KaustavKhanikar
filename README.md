@@ -2,9 +2,6 @@
 Personal Protfolio Website
 # 🌌 Kaustav Khanikar | Personal Portfolio Website
 
-[![GitHub Stars](https://shields.io)](https://github.com/Hungryfoxz/KaustavKhanikar)
-[![GitHub Forks](https://shields.io)](https://github.com/Hungryfoxz/KaustavKhanikar)
-[![License: MIT](https://shields.io)](https://opensource.org)
 
 Welcome to the source repository of my personal engineering portfolio! This website functions as an immersive, highly scalable visual resume curated to showcase my ongoing technical projects, academic research milestones, and core software engineering skillset through a cohesive, responsive web presentation layer.
 
@@ -14,17 +11,17 @@ Welcome to the source repository of my personal engineering portfolio! This webs
 
 Here is a comprehensive look at the interface layouts and design components utilized throughout the platform:
 
-### 🖥️ Desktop Overview & Primary Interface
+### 🖥️ Primary Desktop Interface
 A macro view showcasing the glassmorphism UI structures, core neon accent styling layout configurations, and main landing hero sections:
 <p align="center">
   <img src="bucket/Screenshot1.png" alt="Desktop Interface Preview" width="100%" style="border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); shadow: 0 20px 40px rgba(0,0,0,0.3);">
 </p>
 
-### 📱 Responsive Adaptability (Mobile Viewports)
-Demonstrating structural element scaling across various responsive breakpoints, including the fully animated right-side sliding navigation configuration:
+### 📱 Glance at the rest
+A quick preview of the about and contact section:
 <p align="center">
-  <img src="bucket/Screenshot1.png" alt="Mobile Menu Layout View" width="45%" style="border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-right: 4%;">
-  <img src="bucket/Screenshot1.png" alt="Interactive Glass Form Layout" width="45%" style="border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
+  <img src="bucket/Screenshot2.png" alt="about section" width="45%" style="border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-right: 4%;">
+  <img src="bucket/Screenshot8.png" alt="contact form" width="45%" style="border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
 </p>
 
 ---
@@ -51,9 +48,10 @@ Demonstrating structural element scaling across various responsive breakpoints, 
 
 ```bash
 ├── bucket/                     # Asset depository holding layout preview snapshots
-│   ├── desktop-preview.png     # Full-size desktop UI view
-│   ├── mobile-preview.png      # Mobile responsive breakpoint layout
-│   └── contact-preview.png     # Modern animated glass form showcase
+│   ├── Screenshot1.png         # Hero section
+│   ├── Screenshot2.png         # About section
+|   ├── ...............
+│   └── Screenshot8.png         # Contact section
 ├── index.html                  # Core portfolio template layout presentation file
 └── README.md                   # Repository documentation layer
 ```
