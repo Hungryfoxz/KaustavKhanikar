@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kaustav Kumar Khanikar | Portfolio</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        navy: {
+                            900: '#0a0f1c',
+                            800: '#111827',
+                            700: '#1f2937',
+                        },
+                        accent: {
+                            blue: '#3b82f6',
+                            purple: '#8b5cf6',
+                            cyan: '#06b6d4'
+                        }
+                    },
+                    animation: {
+                        'spin-slow': 'spin 15s linear infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Styles for 3D and Scroll Effects */
+        body {
+            background-color: #0a0f1c;
+            color: #f3f4f6;
+            overflow-x: hidden;
+        }
+
+        /* Gradient Text */
+        .gradient-text {
+            background: linear-gradient(135deg, #4a6cf7, #7c3aed, #c026d3);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% 200%;
+            animation: shimmer 6s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        /* Gradient Text */
+        .moving-gradient-line {
+            background-size: 200% auto;
+            animation: moveGradientLeft 6s linear infinite;
+        }
+
+        @keyframes moveGradientLeft {
+            0% {
+                background-position: 200% center;
+            }
+            100% {
+                background-position: 0% center;
+            }
+        }
+
+
+        /* Glassmorphism utility */
+        .glass {
+            background: rgba(17, 24, 39, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        #mobile-menu.glass {
+            background: rgba(5, 17, 43, 0.93);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            align-items: center;
+        }
+
+        .glass-card {
+            background: linear-gradient(145deg, rgba(31, 41, 55, 0.4) 0%, rgba(17, 24, 39, 0.8) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        /* Reveal Animation Classes */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 3D Hero Element CSS */
+        .hero-3d-container {
+            perspective: 1000px;
+            transform-style: preserve-3d;
+        }
+
+        .ring {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border: 2px solid rgba(139, 92, 246, 0.3);
+            border-radius: 50%;
+            transform-style: preserve-3d;
+        }
+
+        .ring:nth-child(1) { transform: rotateX(70deg) rotateY(20deg); animation: spinRing1 10s linear infinite; border-color: rgba(59, 130, 246, 0.5); }
+        .ring:nth-child(2) { transform: rotateX(20deg) rotateY(70deg); animation: spinRing2 12s linear infinite; border-color: rgba(139, 92, 246, 0.5); }
+        .ring:nth-child(3) { transform: rotateX(50deg) rotateY(50deg); animation: spinRing3 15s linear infinite; border-color: rgba(6, 182, 212, 0.5); }
+
+        @keyframes spinRing1 { 100% { transform: rotateX(70deg) rotateY(380deg); } }
+        @keyframes spinRing2 { 100% { transform: rotateX(380deg) rotateY(70deg); } }
+        @keyframes spinRing3 { 100% { transform: rotateX(410deg) rotateY(410deg); } }
+
+        /* Timeline specific */
+        .timeline-line::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 2px;
+            background: linear-gradient(to bottom, #3b82f6, #8b5cf6, transparent);
+            transform: translateX(-50%);
+        }
+        @media (max-width: 768px) {
+            .timeline-line::before {
+                left: 20px;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-accent-purple selection:text-white relative">
+    <canvas id="bg-3d-canvas" class="fixed top-0 left-0 w-full h-full -z-10 pointer-events-none opacity-40"></canvas>
+    <!-- <canvas id="particle-canvas" class="fixed inset-0 z-[-1] pointer-events-none opacity-40"></canvas> -->
+
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 glass border-b-0 py-4">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center">
+                <a href="#home" class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-accent-blue to-accent-purple tracking-widest">KKK</a>
+                
+                <div class="hidden md:flex space-x-8 items-center text-sm font-medium">
+                    <a href="#home" class="hover:text-accent-blue transition-colors">Home</a>
+                    <a href="#about" class="hover:text-accent-blue transition-colors">About</a>
+                    <a href="#education" class="hover:text-accent-blue transition-colors">Education</a>
+                    <a href="#skills" class="hover:text-accent-blue transition-colors">Skills</a>
+                    <a href="#projects" class="hover:text-accent-blue transition-colors">Projects</a>
+                    <!-- <a href="#research" class="hover:text-accent-blue transition-colors">Research</a> -->
+                    <a href="#experience" class="hover:text-accent-blue transition-colors">Experience</a>
+                    <a href="#contact" class="px-5 py-2 rounded-full bg-gradient-to-r from-accent-blue to-accent-purple hover:opacity-90 transition-opacity shadow-lg shadow-accent-purple/20 text-white">Contact</a>
+                </div>
+
+                <button id="mobile-menu-btn" class="md:hidden text-gray-300 hover:text-white focus:outline-none">
+                    <i id="bars" class="fa-solid fa-bars text-xl h-3 w-3 -translate-x-2"></i>
+                    <i id="xmark" class="hidden fa-solid fa-xmark text-xl h-5 w-5 -translate-y-1"></i>
+                </button> 
+
+            </div>
+        </div>
+
+        <div id="mobile-menu" class="translate-x-full font-bold md:hidden fixed top-full right-0 w-full min-h-screen glass border-b border-white/10 flex flex-col py-4 px-6 space-y-4 shadow-2xl transition-transform duration-300 ease-in-out">
+            <a href="#home" class="block text-gray-300 hover:text-accent-blue">Home</a>
+            <a href="#about" class="block text-gray-300 hover:text-accent-blue">About</a>
+            <a href="#education" class="block text-gray-300 hover:text-accent-blue">Education</a>
+            <a href="#skills" class="block text-gray-300 hover:text-accent-blue">Skills</a>
+            <a href="#projects" class="block text-gray-300 hover:text-accent-blue">Projects</a>
+            <a href="#experience" class="block text-gray-300 hover:text-accent-blue">Experience</a>
+            <a href="#contact" class="block text-gray-300 hover:text-accent-blue">Contact</a>
+        </div>
+    </nav>
+
+
+    <section id="home" class="relative min-h-screen flex items-center justify-center pt-20 pb-12 overflow-hidden">
+        <!-- Scroll indicator -->
+            <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-xs tracking-widest">
+                <div class="animate-bounce">↓</div>
+                <span>SCROLL</span>
+            </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center z-10">
+            
+            <div class="lg:col-span-7 space-y-6 reveal">
+                <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full glass border border-accent-blue/30 text-accent-cyan text-sm">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent-cyan opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-accent-cyan"></span>
+                    </span>
+                    <span>Available for collaboration</span>
+                </div>
+
+                <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white pt-20 md:pt-0">
+                    <!-- Hi, I'm <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">Kaustav Kumar Khanikar</span> -->
+                    Hi, I'm <span class="gradient-text">Kaustav Kumar Khanikar</span>
+                </h1>
+
+                <!-- <h1 class="text-xl font-bold leading-tight">
+                    <span class="text-white">Research Scholar &</span>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-accent-blue via-accent-purple to-accent-cyan">Web Developer</span>
+                </h1> -->
+                
+                <h2 class="text-xl text-gray-300 font-medium">Building digital experiences while exploring the future of Library and Information Science.</h2>
+                
+                <div class="text-gray-400 space-y-4 text-justify leading-relaxed">
+                        I am a <i class="fa-solid fa-graduation-cap text-purple-400"> </i><span class="text-white bold"> Research scholar</span> in Library and Information Science and a passionate <span class="text-transparent bold bg-clip-text bg-gradient-to-r from-accent-blue via-accent-purple to-accent-cyan"><i class="fa-solid fa-code text-indigo-400"> </i> Web Developer</span>. 
+                        <span class="hidden md:flex">I enjoy designing and building elegant digital interfaces. After completing my B.Tech in Electronics 
+                        and Telecommunication Engineering in 2023, I discovered my calling in organizing and preserving knowledge.</span>
+                </div>
+
+                <div class="flex flex-wrap gap-4 pt-4">
+                    <a href="#projects" class="px-8 py-3 rounded-xl bg-gradient-to-r from-accent-blue to-accent-purple text-white font-medium hover:scale-105 transition-transform duration-300 shadow-[0_0_20px_rgba(139,92,246,0.3)]">
+                        <i class="fa-solid fa-rocket"></i> View Projects
+                    </a>
+                    <a href="#contact" class="px-8 py-3 rounded-xl glass border border-white/20 text-white font-medium hover:bg-white/10 transition-colors duration-300 flex items-center gap-2">
+                        <i class="fa-solid fa-download"></i> Download CV
+                    </a>
+                </div>
+
+
+            </div>
+
+            <!-- <div class="flex justify-center items-center h-[500px] hero-3d-container reveal" style="transition-delay: 200ms;"> -->
+                <div class="lg:col-span-5 h-[350px] sm:h-[450px] relative flex items-center justify-center perspective-1000">
+                    <!-- <div id="hero-3d-box" class="w-full h-full transform-style-3d bg-gradient-to-br from-indigo-900/20 to-purple-900/20 rounded-2xl border border-gray-800 backdrop-blur-sm overflow-hidden flex items-center justify-center group shadow-2xl transition-transform duration-300"> -->
+                    <div id="hero-3d-box" class="w-full h-full transform-style-3d overflow-hidden flex items-center justify-center group transition-transform duration-300">
+                        <div id="hero-3d-canvas-container" class="absolute inset-0 w-full h-full"></div>
+                        <div class="absolute bottom-4 text-center w-full pointer-events-none text-xs text-gray-500 tracking-widest uppercase">
+                            <!-- Move mouse over window to interact -->
+                        </div>
+                    </div>
+                </div>
+            <!-- </div> -->
+
+            <!-- <div class="hidden lg:flex justify-center items-center h-[500px] hero-3d-container reveal" style="transition-delay: 200ms;">
+                <div class="relative w-full h-full flex justify-center items-center group">
+                    <div class="absolute w-32 h-32 bg-accent-purple/30 rounded-full blur-[50px] animate-pulse-slow"></div>
+                    <div class="ring"></div>
+                    <div class="ring"></div>
+                    <div class="ring"></div>
+                    <div class="absolute text-accent-cyan text-4xl animate-float" style="animation-delay: 0s; transform: translateZ(50px);"><i class="fa-solid fa-code"></i></div>
+                    <div class="absolute text-accent-purple text-5xl animate-float" style="animation-delay: 1.5s; transform: translateZ(-50px) translateX(80px);"><i class="fa-solid fa-book-open"></i></div>
+                    <div class="absolute text-accent-blue text-3xl animate-float" style="animation-delay: 3s; transform: translateZ(20px) translateY(-80px);"><i class="fa-solid fa-network-wired"></i></div> 
+                </div>
+            </div>-->
+
+        </div>
+    </section>
+
+
+
+    <section id="about" class="py-24 relative z-10 bg-navy-900/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <!-- <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">About Me</h2> -->
+                 <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">About <span class="gradient-text">Me</span></h2>
+                <!-- <div class="h-1 w-20 bg-gradient-to-r from-accent-blue to-accent-purple mx-auto rounded-full"></div> -->
+                <div class="h-[2px] w-40 bg-gradient-to-r from-accent-blue via-accent-purple to-accent-blue mx-auto rounded-full moving-gradient-line"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+                <div class="glass-card p-8 rounded-2xl text-center reveal tilt-card group hover:border-accent-blue/50 transition-colors" style="transition-delay: 100ms;">
+                    <div class="w-16 h-16 mx-auto bg-blue-500/10 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 group-hover:border-accent-blue/50 transition-transform duration-500 border border-blue-500/20">
+                        <i class="fa-solid fa-microscope text-2xl text-accent-blue"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">Research Scholar</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Investigating the intersection of AI, automation, and virtual library assistance to push the boundaries of modern knowledge organization.</p>
+                </div>
+
+                <div class="glass-card p-8 rounded-2xl text-center reveal tilt-card group hover:border-accent-purple/50 transition-colors" style="transition-delay: 200ms;">
+                    <div class="w-16 h-16 mx-auto bg-purple-500/10 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 group-hover:border-accent-purple/50 transition-transform duration-500 border border-purple-500/20">
+                        <i class="fa-solid fa-laptop-code text-2xl text-accent-purple"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">Web Developer</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Architecting robust full-stack applications, interactive UI components, and API bridges using modern JavaScript and Python ecosystems.</p>
+                </div>
+
+                <div class="glass-card p-8 rounded-2xl text-center reveal tilt-card group hover:border-accent-cyan/50 transition-colors" style="transition-delay: 300ms;">
+                    <div class="w-16 h-16 mx-auto bg-cyan-500/10 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 group-hover:border-accent-cyan/50 transition-transform duration-500 border border-cyan-500/20">
+                        <i class="fa-solid fa-book-atlas text-2xl text-accent-cyan"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">Information Professional</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Bridging traditional library management systems with next-generation digital library architectures and cataloging standards.</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
+
+    <section id="education" class="py-24 relative z-10">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">My Academic <span class="gradient-text">Journey</span></h2>
+                <!-- <div class="h-1 w-20 bg-gradient-to-r from-accent-blue to-accent-purple mx-auto rounded-full"></div> -->
+                <div class="h-[2px] w-40 bg-gradient-to-r from-accent-blue via-accent-purple to-accent-blue mx-auto rounded-full moving-gradient-line"></div>
+            </div>
+
+            <div class="relative timeline-line">
+                <div class="relative flex md:justify-between items-center w-full mb-12 reveal">
+                    <div class="hidden md:block w-5/12"></div>
+                    <div class="absolute left-[20px] md:left-1/2 w-4 h-4 rounded-full bg-pink-400 border-4 border-navy-900 transform -translate-x-1/2 z-10"></div>
+                    <div class="w-full md:w-5/12 pl-12 md:pl-0">
+                        <div class="glass-card p-6 rounded-2xl hover:border-pink-400/40 transition-colors tilt-card">
+                            <span class="text-pink-400 font-bold text-sm mb-2 block">2025 – Present</span>
+                            <h3 class="text-lg font-bold text-white">PhD in Library and Information Science</h3>
+                            <p class="text-gray-400 text-sm mt-2">Advanced research into AI adoption and integration in research activity.</p>
+                            <p class="text-gray-400 text-sm mt-2">Supervisor, Dr. Niraj Barua, Gauhati University.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative flex md:justify-between items-center w-full mb-12 reveal flex-row-reverse md:flex-row">
+                    <div class="w-full md:w-5/12 pl-12 md:pl-0 md:pr-12 md:text-right">
+                        <div class="glass-card p-6 rounded-2xl hover:border-accent-blue/50 transition-colors tilt-card">
+                            <span class="text-accent-blue font-bold text-sm mb-2 block">2023 – 2025</span>
+                            <h3 class="text-lg font-bold text-white">Master of Library and Information Science (MLISc)</h3>
+                            <p class="text-gray-400 text-sm mt-2">Specialization in knowledge organization, digital libraries, metrics study and artificial intelligence.</p>
+                        </div>
+                    </div>
+                    <div class="absolute left-[20px] md:left-1/2 w-4 h-4 rounded-full bg-accent-blue border-4 border-navy-900 transform -translate-x-1/2 z-10"></div>
+                    <div class="hidden md:block w-5/12"></div>
+                </div>
+
+                <div class="relative flex md:justify-between items-center w-full mb-12 reveal">
+                    <div class="hidden md:block w-5/12"></div>
+                    <div class="absolute left-[20px] md:left-1/2 w-4 h-4 rounded-full bg-accent-cyan border-4 border-navy-900 transform -translate-x-1/2 z-10"></div>
+                    <div class="w-full md:w-5/12 pl-12 md:pl-0">
+                        <div class="glass-card p-6 rounded-2xl hover:border-accent-cyan/50 transition-colors tilt-card">
+                            <span class="text-accent-cyan font-bold text-sm mb-2 block">2020 – 2023</span>
+                            <h3 class="text-lg font-bold text-white">Bachelor of Computer Applications (BCA)</h3>
+                            <p class="text-gray-400 text-sm mt-2">Specialization in software design, development, and management of computer networks.</p>
+                            <p class="text-gray-400 text-sm mt-2">Krishna Kanta Handiqui State Open University.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative flex md:justify-between items-center w-full mb-12 reveal flex-row-reverse md:flex-row">
+                    <div class="w-full md:w-5/12 pl-12 md:pl-0 md:pr-12 md:text-right">
+                        <div class="glass-card p-6 rounded-2xl hover:border-indigo-500 transition-colors tilt-card">
+                            <span class="text-indigo-500 font-bold text-sm mb-2 block">2019 – 2023</span>
+                            <h3 class="text-lg font-bold text-white">B.Tech in Electronics & Telecommunication</h3>
+                            <p class="text-gray-400 text-sm mt-2">Foundational engineering, circuit design, and software programming logic.</p>
+                            <p class="text-gray-400 text-sm mt-2">Jorhat Institute of Science and Technology.</p>
+                        </div>
+                    </div>
+                    <div class="absolute left-[20px] md:left-1/2 w-4 h-4 rounded-full bg-indigo-500 border-4 border-navy-900 transform -translate-x-1/2 z-10"></div>
+                    <div class="hidden md:block w-5/12"></div>
+                </div>
+
+                <div class="relative flex md:justify-between items-center w-full mb-12 reveal">
+                    <div class="hidden md:block w-5/12"></div>
+                    <div class="absolute left-[20px] md:left-1/2 w-4 h-4 rounded-full bg-teal-500 border-4 border-navy-900 transform -translate-x-1/2 z-10"></div>
+                    <div class="w-full md:w-5/12 pl-12 md:pl-0">
+                        <div class="glass-card p-6 rounded-2xl hover:border-teal-500/50 transition-colors tilt-card">
+                            <span class="text-teal-500 font-bold text-sm mb-2 block">2017 – 2019</span>
+                            <h3 class="text-lg font-bold text-white">Salt Brook Academy</h3>
+                            <p class="text-gray-400 text-sm mt-2">Higher Secondary Education (10+2).</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative flex md:justify-between items-center w-full mb-12 reveal flex-row-reverse md:flex-row">
+                    <div class="w-full md:w-5/12 pl-12 md:pl-0 md:pr-12 md:text-right">
+                        <div class="glass-card p-6 rounded-2xl hover:border-cyan-500/50 transition-colors tilt-card">
+                            <span class="text-accent-cyan font-bold text-sm mb-2 block">2012 – 2017</span>
+                            <h3 class="text-lg font-bold text-white">Don Bosco High School</h3>
+                            <p class="text-gray-400 text-sm mt-2">Primary Education (Class 6–10).</p>
+                        </div>
+                    </div>
+                    <div class="absolute left-[20px] md:left-1/2 w-4 h-4 rounded-full bg-cyan-500 border-4 border-navy-900 transform -translate-x-1/2 z-10"></div>
+                    <div class="hidden md:block w-5/12"></div>
+                </div>
+
+                <div class="relative flex md:justify-between items-center w-full reveal">
+                    <div class="hidden md:block w-5/12"></div>
+                    <div class="absolute left-[20px] md:left-1/2 w-4 h-4 rounded-full bg-gray-500 border-4 border-navy-900 transform -translate-x-1/2 z-10"></div>
+                    <div class="w-full md:w-5/12 pl-12 md:pl-0">
+                        <div class="glass-card p-6 rounded-2xl hover:border-gray-500/50 transition-colors tilt-card">
+                            <span class="text-gray-400 font-bold text-sm mb-2 block">2005 – 2012</span>
+                            <h3 class="text-lg font-bold text-white">Gold Line Model High School</h3>
+                            <p class="text-gray-400 text-sm mt-2">Preliminary Education (Class 1–5).</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <section id="skills" class="py-24 relative z-10 bg-navy-900/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Skills & <span class="gradient-text">Expertise</span></h2>
+                <div class="h-[2px] w-40 bg-gradient-to-r from-accent-blue via-accent-purple to-accent-blue mx-auto rounded-full moving-gradient-line"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="glass-card p-8 rounded-2xl reveal tilt-card">
+                    <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-3">
+                        <i class="fa-solid fa-code text-accent-blue"></i> Web Development
+                    </h3>
+                    <div class="space-y-4">
+                        <div>
+                            <p class="text-sm text-gray-300 mb-2">Frontend (HTML, CSS, JS, Tailwind, React)</p>
+                            <div class="w-full bg-gray-800 rounded-full h-2">
+                                <div class="bg-gradient-to-r from-accent-blue to-accent-cyan h-2 rounded-full" style="width: 90%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-300 mb-2">Backend (Python, Node, FastAPI)</p>
+                            <div class="w-full bg-gray-800 rounded-full h-2">
+                                <div class="bg-gradient-to-r from-accent-blue to-accent-cyan h-2 rounded-full" style="width: 80%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-300 mb-2">Fullstack / Frameworks (Django, Streamlit)</p>
+                            <div class="w-full bg-gray-800 rounded-full h-2">
+                                <div class="bg-gradient-to-r from-accent-blue to-accent-cyan h-2 rounded-full" style="width: 85%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card p-8 rounded-2xl reveal tilt-card">
+                    <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-3">
+                        <i class="fa-solid fa-book-bookmark text-accent-purple"></i> Library & Information Science
+                    </h3>
+                    <div class="flex flex-wrap gap-3">
+                        <span class="px-4 py-2 rounded-lg glass text-sm text-gray-200 border-accent-purple/30">Library Management</span>
+                        <span class="px-4 py-2 rounded-lg glass text-sm text-gray-200 border-accent-purple/30">Digital Libraries</span>
+                        <span class="px-4 py-2 rounded-lg glass text-sm text-gray-200 border-accent-purple/30">Technical Processing</span>
+                        <span class="px-4 py-2 rounded-lg glass text-sm text-gray-200 border-accent-purple/30">Library Management Software</span>
+                        <span class="px-4 py-2 rounded-lg glass text-sm text-gray-200 border-accent-purple/30">Server Management</span>
+                    </div>
+                </div>
+
+                <div class="glass-card p-8 rounded-2xl reveal tilt-card">
+                    <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-3">
+                        <i class="fa-solid fa-flask text-accent-cyan"></i> Research
+                    </h3>
+                    <div class="flex flex-wrap gap-3">
+                        <span class="px-4 py-2 rounded-lg glass text-sm text-gray-200 border-accent-cyan/30">Academic Writing</span>
+                        <span class="px-4 py-2 rounded-lg glass text-sm text-gray-200 border-accent-cyan/30">Systematic Literature Review</span>
+                        <span class="px-4 py-2 rounded-lg glass text-sm text-gray-200 border-accent-cyan/30">Bibliometric & Webometric Analysis</span>
+                        <span class="px-4 py-2 rounded-lg glass text-sm text-gray-200 border-accent-cyan/30">LLM Fine-tuning (LoRA)</span>
+                        <span class="px-4 py-2 rounded-lg glass text-sm text-gray-200 border-accent-cyan/30">AI Integration in Libraries</span>
+                    </div>
+                </div>
+
+                <div class="glass-card p-8 rounded-2xl reveal tilt-card">
+                    <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-3">
+                        <i class="fa-solid fa-toolbox text-teal-400"></i> Technical Tools
+                    </h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="flex items-center gap-3 text-gray-300"><i class="fa-brands fa-github text-xl"></i> GitHub</div>
+                        <div class="flex items-center gap-3 text-gray-300"><i class="fa-solid fa-database text-xl"></i> Koha LMS</div>
+                        <div class="flex items-center gap-3 text-gray-300"><i class="fa-solid fa-server text-xl"></i> DSpace</div>
+                        <div class="flex items-center gap-3 text-gray-300"><i class="fa-solid fa-chart-bar text-xl"></i> R Software</div>
+                        <div class="flex items-center gap-3 text-gray-300"><i class="fa-solid fa-face-smile text-xl"></i> HuggingFace</div>
+                        <div class="flex items-center gap-3 text-gray-300"><i class="fa-solid fa-brain text-xl"></i> Ollama</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <section id="projects" class="py-24 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Web Development <span class="gradient-text">Projects</span></h2>
+                <div class="h-[2px] w-40 bg-gradient-to-r from-accent-blue via-accent-purple to-accent-blue mx-auto rounded-full moving-gradient-line"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+
+
+            <div class="bg-[#131b2e] rounded-xl border border-gray-800 p-6 flex flex-col justify-between transition-all duration-300 hover:border-indigo-500 hover:shadow-2xl hover:shadow-indigo-500/10 group transform-style-3d">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="text-3xl text-indigo-400">
+                            <i class="fa-solid fa-square-poll-horizontal"></i>
+                        </div>
+                         <!-- Dynamic Link Container -->
+                        <a href="https://github.com" target="_blank" class="relative flex items-center justify-end">
+                            
+                            <!-- 1. Default State: GitHub Logo (Hidden on Group Hover) -->
+                            <span class="text-gray-400 hover:text-white text-lg transition-all duration-300 block group-hover:opacity-0 group-hover:scale-75 pointer-events-none group-hover:pointer-events-auto">
+                                <i class="fa-brands fa-github"></i>
+                            </span>
+                            
+                            <!-- 2. Hover State: Pill Button (Revealed on Group Hover) -->
+                            <span class="absolute right-0 opacity-0 scale-95 translate-x-2 group-hover:opacity-100 group-hover:scale-100 group-hover:translate-x-0 transition-all duration-300 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-4 py-2 rounded-full whitespace-nowrap shadow-md flex items-center gap-1">
+                                Visit Project <span class="transition-transform duration-200 group-hover:translate-x-0.5">→</span>
+                            </span>
+                            
+                        </a>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-indigo-300 transition-colors">Department Representative Selection Portal</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">A custom web portal engineered to hold election for the selection of departmental representatives, developed in 2024. Hosted with Nginx.</p>
+                </div>
+                <div class="flex flex-wrap gap-2 pt-4 border-t border-gray-800/60">
+                    <span class="text-xs bg-gray-800 text-indigo-300 px-2 py-1 rounded">Django</span>
+                    <span class="text-xs bg-gray-800 text-indigo-300 px-2 py-1 rounded">SQL Lite</span>
+                    <span class="text-xs bg-gray-800 text-indigo-300 px-2 py-1 rounded">Tailwind CSS</span>
+                </div>
+            </div>
+
+            <div class="bg-[#131b2e] rounded-xl border border-gray-800 p-6 flex flex-col justify-between transition-all duration-300 hover:border-indigo-500 hover:shadow-2xl hover:shadow-indigo-500/10 group transform-style-3d">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="text-3xl text-purple-400"><i class="fa-solid fa-database"></i></div>
+                          <!-- Dynamic Link Container -->
+                        <a href="https://github.com" target="_blank" class="relative flex items-center justify-end">
+                            
+                            <!-- 1. Default State: GitHub Logo (Hidden on Group Hover) -->
+                            <span class="text-gray-400 hover:text-white text-lg transition-all duration-300 block group-hover:opacity-0 group-hover:scale-75 pointer-events-none group-hover:pointer-events-auto">
+                                <i class="fa-brands fa-github"></i>
+                            </span>
+                            
+                            <!-- 2. Hover State: Pill Button (Revealed on Group Hover) -->
+                            <span class="absolute right-0 opacity-0 scale-95 translate-x-2 group-hover:opacity-100 group-hover:scale-100 group-hover:translate-x-0 transition-all duration-300 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-4 py-2 rounded-full whitespace-nowrap shadow-md flex items-center gap-1">
+                                Visit Project <span class="transition-transform duration-200 group-hover:translate-x-0.5">→</span>
+                            </span>
+                            
+                        </a>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-purple-300 transition-colors">E-Commerce Site</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">A modern, high-performance full-stack e-commerce application built using Next.js (Pages Router), MongoDB, and styled seamlessly with Tailwind CSS.</p>
+                </div>
+                <div class="flex flex-wrap gap-2 pt-4 border-t border-gray-800/60">
+                    <span class="text-xs bg-gray-800 text-purple-300 px-2 py-1 rounded">Next.js</span>
+                    <span class="text-xs bg-gray-800 text-purple-300 px-2 py-1 rounded">React</span>
+                    <span class="text-xs bg-gray-800 text-purple-300 px-2 py-1 rounded">MongoDB</span>
+                    <span class="text-xs bg-gray-800 text-purple-300 px-2 py-1 rounded">Tailwind CSS</span>
+                </div>
+            </div>
+
+            <div class="bg-[#131b2e] rounded-xl border border-gray-800 p-6 flex flex-col justify-between transition-all duration-300 hover:border-indigo-500 hover:shadow-2xl hover:shadow-indigo-500/10 group transform-style-3d">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="text-3xl text-pink-400"><i class="fa-solid fa-puzzle-piece"></i></div>
+                          <!-- Dynamic Link Container -->
+                        <a href="https://github.com" target="_blank" class="relative flex items-center justify-end">
+                            
+                            <!-- 1. Default State: GitHub Logo (Hidden on Group Hover) -->
+                            <span class="text-gray-400 hover:text-white text-lg transition-all duration-300 block group-hover:opacity-0 group-hover:scale-75 pointer-events-none group-hover:pointer-events-auto">
+                                <i class="fa-brands fa-github"></i>
+                            </span>
+                            
+                            <!-- 2. Hover State: Pill Button (Revealed on Group Hover) -->
+                            <span class="absolute right-0 opacity-0 scale-95 translate-x-2 group-hover:opacity-100 group-hover:scale-100 group-hover:translate-x-0 transition-all duration-300 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-4 py-2 rounded-full whitespace-nowrap shadow-md flex items-center gap-1">
+                                Visit Project <span class="transition-transform duration-200 group-hover:translate-x-0.5">→</span>
+                            </span>
+                            
+                        </a>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-pink-300 transition-colors">Cataloguing with Local Vision LLM</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">An local implementation of a Vision LLM for cataloguing purposes, integrated with LM Studio and Streamlit for a seamless user experience.</p>
+                </div>
+                <div class="flex flex-wrap gap-2 pt-4 border-t border-gray-800/60">
+                    <span class="text-xs bg-gray-800 text-pink-300 px-2 py-1 rounded">Vision LLM</span>
+                    <span class="text-xs bg-gray-800 text-pink-300 px-2 py-1 rounded">LM Studio</span>
+                    <span class="text-xs bg-gray-800 text-pink-300 px-2 py-1 rounded">Streamlit</span>
+                    <span class="text-xs bg-gray-800 text-pink-300 px-2 py-1 rounded">Koha</span>
+                </div>
+            </div>
+
+            <div class="bg-[#131b2e] rounded-xl border border-gray-800 p-6 flex flex-col justify-between transition-all duration-300 hover:border-indigo-500 hover:shadow-2xl hover:shadow-indigo-500/10 group transform-style-3d md:col-span-1 lg:col-span-1">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="text-3xl text-teal-400"><i class="fa-solid fa-magnifying-glass text-teal-400"></i></div>
+                          <!-- Dynamic Link Container -->
+                        <a href="https://github.com" target="_blank" class="relative flex items-center justify-end">
+                            
+                            <!-- 1. Default State: GitHub Logo (Hidden on Group Hover) -->
+                            <span class="text-gray-400 hover:text-white text-lg transition-all duration-300 block group-hover:opacity-0 group-hover:scale-75 pointer-events-none group-hover:pointer-events-auto">
+                                <i class="fa-brands fa-github"></i>
+                            </span>
+                            
+                            <!-- 2. Hover State: Pill Button (Revealed on Group Hover) -->
+                            <span class="absolute right-0 opacity-0 scale-95 translate-x-2 group-hover:opacity-100 group-hover:scale-100 group-hover:translate-x-0 transition-all duration-300 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-4 py-2 rounded-full whitespace-nowrap shadow-md flex items-center gap-1">
+                                Visit Project <span class="transition-transform duration-200 group-hover:translate-x-0.5">→</span>
+                            </span>
+                            
+                        </a>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-teal-300 transition-colors">Finetuning a Library Chatbot</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">A chatbot finetuned for library-specific queries (Custom Dataset developd from KKH Library), leveraging the Llama 3.2 open-source model and integrated with Ollama for seamless deployment.</p>
+                </div>
+                <div class="flex flex-wrap gap-2 pt-4 border-t border-gray-800/60">
+                    <span class="text-xs bg-gray-800 text-teal-300 px-2 py-1 rounded">Finetuning</span>
+                    <span class="text-xs bg-gray-800 text-teal-300 px-2 py-1 rounded">Llama 3.2</span>
+                    <span class="text-xs bg-gray-800 text-teal-300 px-2 py-1 rounded">Hugging Face</span>
+                </div>
+            </div>
+
+            <div class="bg-[#131b2e] rounded-xl border border-gray-800 p-6 flex flex-col justify-between transition-all duration-300 hover:border-indigo-500 hover:shadow-2xl hover:shadow-indigo-500/10 group transform-style-3d md:col-span-2 lg:col-span-1">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="text-3xl text-amber-400"><i class="fa-solid fa-book-open"></i></div>
+                          <!-- Dynamic Link Container -->
+                        <a href="https://github.com" target="_blank" class="relative flex items-center justify-end">
+                            
+                            <!-- 1. Default State: GitHub Logo (Hidden on Group Hover) -->
+                            <span class="text-gray-400 hover:text-white text-lg transition-all duration-300 block group-hover:opacity-0 group-hover:scale-75 pointer-events-none group-hover:pointer-events-auto">
+                                <i class="fa-brands fa-github"></i>
+                            </span>
+                            
+                            <!-- 2. Hover State: Pill Button (Revealed on Group Hover) -->
+                            <span class="absolute right-0 opacity-0 scale-95 translate-x-2 group-hover:opacity-100 group-hover:scale-100 group-hover:translate-x-0 transition-all duration-300 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-4 py-2 rounded-full whitespace-nowrap shadow-md flex items-center gap-1">
+                                Visit Project <span class="transition-transform duration-200 group-hover:translate-x-0.5">→</span>
+                            </span>
+                            
+                        </a>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-amber-300 transition-colors">Portfolio Website</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">A responsive portfolio website redesigning the existing one of Dr. Badan Barman built with modern web technologies, showcasing a modern design.</p>
+                </div>
+                <div class="flex flex-wrap gap-2 pt-4 border-t border-gray-800/60">
+                    <span class="text-xs bg-gray-800 text-amber-300 px-2 py-1 rounded">Django</span>
+                    <span class="text-xs bg-gray-800 text-amber-300 px-2 py-1 rounded">Tailwind CSS</span>
+                    <span class="text-xs bg-gray-800 text-amber-300 px-2 py-1 rounded">Full Stack</span>
+                </div>
+            </div>
+
+            <div class="bg-[#131b2e] rounded-xl border border-gray-800 p-6 flex flex-col justify-between transition-all duration-300 hover:border-indigo-500 hover:shadow-2xl hover:shadow-indigo-500/10 group transform-style-3d md:col-span-2 lg:col-span-1">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="text-3xl text-cyan-400"><i class="fa-solid fa-brain"></i></div>
+                          <!-- Dynamic Link Container -->
+                        <a href="https://github.com" target="_blank" class="relative flex items-center justify-end">
+                            
+                            <!-- 1. Default State: GitHub Logo (Hidden on Group Hover) -->
+                            <span class="text-gray-400 hover:text-white text-lg transition-all duration-300 block group-hover:opacity-0 group-hover:scale-75 pointer-events-none group-hover:pointer-events-auto">
+                                <i class="fa-brands fa-github"></i>
+                            </span>
+                            
+                            <!-- 2. Hover State: Pill Button (Revealed on Group Hover) -->
+                            <span class="absolute right-0 opacity-0 scale-95 translate-x-2 group-hover:opacity-100 group-hover:scale-100 group-hover:translate-x-0 transition-all duration-300 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-4 py-2 rounded-full whitespace-nowrap shadow-md flex items-center gap-1">
+                                Visit Project <span class="transition-transform duration-200 group-hover:translate-x-0.5">→</span>
+                            </span>
+                            
+                        </a>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-cyan-300 transition-colors">Retrieval-Augmented Generation</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">A virtual library assistant developed for library-specific queries, leveraging the Gemma2 open-source model and integrated with Ollama for seamless deployment.</p>
+                </div>
+                <div class="flex flex-wrap gap-2 pt-4 border-t border-gray-800/60">
+                    <span class="text-xs bg-gray-800 text-cyan-300 px-2 py-1 rounded">RAG</span>
+                    <span class="text-xs bg-gray-800 text-cyan-300 px-2 py-1 rounded">LM Studio</span>
+                    <span class="text-xs bg-gray-800 text-cyan-300 px-2 py-1 rounded">Qwen</span>
+                </div>
+            </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!--<section id="research" class="py-24 relative z-10 bg-navy-900/50">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Research Publications</h2>
+                <div class="h-1 w-20 bg-gradient-to-r from-accent-blue to-accent-purple mx-auto rounded-full"></div>
+            </div>
+
+            <div class="space-y-6">
+                <div class="glass-card p-6 rounded-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4 reveal tilt-card">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="px-2 py-1 bg-accent-blue/20 text-accent-blue text-xs rounded border border-accent-blue/30 font-semibold">2026</span>
+                            <span class="text-sm text-gray-400"><i class="fa-solid fa-book mr-1"></i> Journal of Academic Librarianship (Under Review)</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">AI-Driven Cataloging Workflows: Automating Bibliographic Metadata Extraction</h3>
+                        <p class="text-sm text-gray-400">An examination of utilizing vision-capable Large Language Models to parse raw images into standard MARC record structures for integration with Koha.</p>
+                    </div>
+                    <div class="flex gap-3 mt-4 md:mt-0">
+                        <a href="#" class="px-4 py-2 rounded-lg glass text-sm hover:bg-white/10 transition-colors border border-white/20">DOI</a>
+                        <a href="#" class="px-4 py-2 rounded-lg bg-accent-purple/20 text-accent-purple text-sm hover:bg-accent-purple/40 transition-colors border border-accent-purple/50">Read Paper</a>
+                    </div>
+                </div>
+
+                <div class="glass-card p-6 rounded-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4 reveal tilt-card">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="px-2 py-1 bg-accent-blue/20 text-accent-blue text-xs rounded border border-accent-blue/30 font-semibold">2026</span>
+                            <span class="text-sm text-gray-400"><i class="fa-solid fa-book mr-1"></i> International Conference on Digital Libraries</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">Evaluating Small-Parameter LLMs for Library Reference Services: A Case Study of ViLA</h3>
+                        <p class="text-sm text-gray-400">A comparative analysis using BERTScore and F1 metrics to evaluate the performance of base vs fine-tuned small LLMs in domain-specific queries.</p>
+                    </div>
+                    <div class="flex gap-3 mt-4 md:mt-0">
+                        <a href="#" class="px-4 py-2 rounded-lg glass text-sm hover:bg-white/10 transition-colors border border-white/20">DOI</a>
+                        <a href="#" class="px-4 py-2 rounded-lg bg-accent-purple/20 text-accent-purple text-sm hover:bg-accent-purple/40 transition-colors border border-accent-purple/50">Read Paper</a>
+                    </div>
+                </div>
+
+                <div class="glass-card p-6 rounded-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4 reveal tilt-card">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="px-2 py-1 bg-gray-700 text-gray-300 text-xs rounded font-semibold">2025</span>
+                            <span class="text-sm text-gray-400"><i class="fa-solid fa-book mr-1"></i> [Journal/Conference Name]</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">[Placeholder Publication Title Regarding Information Architecture]</h3>
+                        <p class="text-sm text-gray-400">Brief abstract snippet discussing the methodologies and findings of the proposed study within the LIS domain.</p>
+                    </div>
+                    <div class="flex gap-3 mt-4 md:mt-0">
+                        <a href="#" class="px-4 py-2 rounded-lg glass text-sm hover:bg-white/10 transition-colors border border-white/20 text-gray-500 pointer-events-none">DOI</a>
+                        <a href="#" class="px-4 py-2 rounded-lg glass text-sm hover:bg-white/10 transition-colors border border-white/20 text-gray-500 pointer-events-none">Read Paper</a>
+                    </div>
+                </div>
+                
+                <div class="glass-card p-6 rounded-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4 reveal tilt-card opacity-60">
+                    <div class="flex-1">
+                        <h3 class="text-lg font-bold text-white mb-2">Publication Title Placeholder 4</h3>
+                        <p class="text-sm text-gray-400">Content to be updated soon.</p>
+                    </div>
+                </div>
+                <div class="glass-card p-6 rounded-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4 reveal tilt-card opacity-60">
+                    <div class="flex-1">
+                        <h3 class="text-lg font-bold text-white mb-2">Publication Title Placeholder 5</h3>
+                        <p class="text-sm text-gray-400">Content to be updated soon.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section> -->
+
+
+    <!-- <section id="research" class="relative py-20 lg:py-28">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">Research <span class="gradient-text">Publications</span></h2>
+                <p class="text-gray-400">Academic publications and research contributions.</p>
+            </div>
+
+            <div class="space-y-6">
+
+                <div class="glass-card reveal p-6 lg:p-8 hover:border-white/15 transition-all duration-300 group">
+                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                        <div class="flex-1">
+                            <span class="text-xs font-bold text-blue-400 uppercase tracking-wider">Journal Article · 2025</span>
+                            <h4 class="text-lg font-bold text-white mt-1 group-hover:text-blue-300 transition-colors">Artificial Intelligence Applications in Modern Library Systems: A Systematic Review</h4>
+                            <p class="text-gray-400 text-sm mt-2">Journal of Library Innovation</p>
+                            <p class="text-gray-500 text-xs mt-2 line-clamp-2">This paper presents a comprehensive systematic review of AI applications in library systems, examining machine learning for cataloging, natural language processing for reference services, and computer vision for document digitization...</p>
+                        </div>
+                        <div class="flex gap-3 flex-shrink-0">
+                            <a href="#" class="px-4 py-2 glass rounded-lg text-sm text-gray-300 hover:text-white transition-all"><i class="fas fa-link mr-1"></i> DOI</a>
+                            <a href="#" class="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg text-sm text-white hover:from-blue-500 hover:to-purple-500 transition-all"><i class="fas fa-file-alt mr-1"></i> Read Paper</a>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="glass-card reveal p-6 lg:p-8 hover:border-white/15 transition-all duration-300 group" style="transition-delay: 0.1s;">
+                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                        <div class="flex-1">
+                            <span class="text-xs font-bold text-purple-400 uppercase tracking-wider">Conference Paper · 2024</span>
+                            <h4 class="text-lg font-bold text-white mt-1 group-hover:text-purple-300 transition-colors">Digital Libraries and Open Access: Bridging the Information Divide</h4>
+                            <p class="text-gray-400 text-sm mt-2">International Conference on Digital Libraries</p>
+                            <p class="text-gray-500 text-xs mt-2 line-clamp-2">Exploring the role of digital libraries in promoting open access to scholarly information, this paper analyzes the current landscape of open access repositories and proposes a framework for enhanced information accessibility...</p>
+                        </div>
+                        <div class="flex gap-3 flex-shrink-0">
+                            <a href="#" class="px-4 py-2 glass rounded-lg text-sm text-gray-300 hover:text-white transition-all"><i class="fas fa-link mr-1"></i> DOI</a>
+                            <a href="#" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg text-sm text-white hover:from-purple-500 hover:to-pink-500 transition-all"><i class="fas fa-file-alt mr-1"></i> Read Paper</a>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="glass-card reveal p-6 lg:p-8 hover:border-white/15 transition-all duration-300 group" style="transition-delay: 0.2s;">
+                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                        <div class="flex-1">
+                            <span class="text-xs font-bold text-cyan-400 uppercase tracking-wider">Journal Article · 2024</span>
+                            <h4 class="text-lg font-bold text-white mt-1 group-hover:text-cyan-300 transition-colors">Bibliometric Analysis of Research Trends in Information Science (2019-2024)</h4>
+                            <p class="text-gray-400 text-sm mt-2">Scientometrics Review</p>
+                            <p class="text-gray-500 text-xs mt-2 line-clamp-2">A comprehensive bibliometric study analyzing publication patterns, citation networks, and emerging research fronts in the field of Library and Information Science over a five-year period...</p>
+                        </div>
+                        <div class="flex gap-3 flex-shrink-0">
+                            <a href="#" class="px-4 py-2 glass rounded-lg text-sm text-gray-300 hover:text-white transition-all"><i class="fas fa-link mr-1"></i> DOI</a>
+                            <a href="#" class="px-4 py-2 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-lg text-sm text-white hover:from-cyan-500 hover:to-blue-500 transition-all"><i class="fas fa-file-alt mr-1"></i> Read Paper</a>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="glass-card reveal p-6 lg:p-8 hover:border-white/15 transition-all duration-300 group" style="transition-delay: 0.3s;">
+                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                        <div class="flex-1">
+                            <span class="text-xs font-bold text-green-400 uppercase tracking-wider">Working Paper · 2025</span>
+                            <h4 class="text-lg font-bold text-white mt-1 group-hover:text-green-300 transition-colors">Knowledge Management Frameworks for Academic Libraries in the Digital Age</h4>
+                            <p class="text-gray-400 text-sm mt-2">ResearchGate Preprint</p>
+                            <p class="text-gray-500 text-xs mt-2 line-clamp-2">Proposing a novel knowledge management framework tailored for academic libraries transitioning to digital-first operations, incorporating elements of organizational learning and technology adoption...</p>
+                        </div>
+                        <div class="flex gap-3 flex-shrink-0">
+                            <a href="#" class="px-4 py-2 glass rounded-lg text-sm text-gray-300 hover:text-white transition-all"><i class="fas fa-link mr-1"></i> DOI</a>
+                            <a href="#" class="px-4 py-2 bg-gradient-to-r from-green-600 to-cyan-600 rounded-lg text-sm text-white hover:from-green-500 hover:to-cyan-500 transition-all"><i class="fas fa-file-alt mr-1"></i> Read Paper</a>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="glass-card reveal p-6 lg:p-8 hover:border-white/15 transition-all duration-300 group" style="transition-delay: 0.4s;">
+                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                        <div class="flex-1">
+                            <span class="text-xs font-bold text-orange-400 uppercase tracking-wider">Conference Paper · 2023</span>
+                            <h4 class="text-lg font-bold text-white mt-1 group-hover:text-orange-300 transition-colors">Integrating IoT Technologies in Smart Library Infrastructure</h4>
+                            <p class="text-gray-400 text-sm mt-2">National Conference on Library Innovation</p>
+                            <p class="text-gray-500 text-xs mt-2 line-clamp-2">Examining the potential of Internet of Things (IoT) devices in creating smart library environments, including automated inventory management, environmental monitoring, and user behavior analytics...</p>
+                        </div>
+                        <div class="flex gap-3 flex-shrink-0">
+                            <a href="#" class="px-4 py-2 glass rounded-lg text-sm text-gray-300 hover:text-white transition-all"><i class="fas fa-link mr-1"></i> DOI</a>
+                            <a href="#" class="px-4 py-2 bg-gradient-to-r from-orange-600 to-red-600 rounded-lg text-sm text-white hover:from-orange-500 hover:to-red-500 transition-all"><i class="fas fa-file-alt mr-1"></i> Read Paper</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section> -->
+
+
+    <section class="py-24 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Research <span class="gradient-text">Interests</span></h2>
+                <div class="h-[2px] w-40 bg-gradient-to-r from-accent-blue via-accent-purple to-accent-blue mx-auto rounded-full moving-gradient-line"></div>
+            </div>
+
+            <!-- <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
+                <div class="glass-card p-6 rounded-xl text-center reveal group hover:border-accent-blue/50 transition-colors cursor-default">
+                    <i class="fa-solid fa-brain text-3xl text-gray-500 group-hover:text-accent-blue transition-colors mb-3"></i>
+                    <h3 class="font-semibold text-gray-200">Artificial Intelligence in Libraries</h3>
+                </div>
+                <div class="glass-card p-6 rounded-xl text-center reveal group hover:border-accent-purple/50 transition-colors cursor-default" style="transition-delay: 50ms;">
+                    <i class="fa-solid fa-server text-3xl text-gray-500 group-hover:text-accent-purple transition-colors mb-3"></i>
+                    <h3 class="font-semibold text-gray-200">Digital Libraries</h3>
+                </div>
+                <div class="glass-card p-6 rounded-xl text-center reveal group hover:border-accent-cyan/50 transition-colors cursor-default" style="transition-delay: 100ms;">
+                    <i class="fa-solid fa-magnifying-glass-chart text-3xl text-gray-500 group-hover:text-accent-cyan transition-colors mb-3"></i>
+                    <h3 class="font-semibold text-gray-200">Information Retrieval</h3>
+                </div>
+                <div class="glass-card p-6 rounded-xl text-center reveal group hover:border-accent-cyan/50 transition-colors cursor-default" style="transition-delay: 150ms;">
+                    <i class="fa-solid fa-users-viewfinder text-3xl text-gray-500 group-hover:text-accent-cyan transition-colors mb-3"></i>
+                    <h3 class="font-semibold text-gray-200">Scholarly Communication</h3>
+                </div>
+                <div class="glass-card p-6 rounded-xl text-center reveal group hover:border-accent-purple/50 transition-colors cursor-default" style="transition-delay: 200ms;">
+                    <i class="fa-solid fa-chart-pie text-3xl text-gray-500 group-hover:text-accent-purple transition-colors mb-3"></i>
+                    <h3 class="font-semibold text-gray-200">Bibliometrics</h3>
+                </div>
+                <div class="glass-card p-6 rounded-xl text-center reveal group hover:border-accent-blue/50 transition-colors cursor-default" style="transition-delay: 250ms;">
+                    <i class="fa-solid fa-folder-tree text-3xl text-gray-500 group-hover:text-accent-blue transition-colors mb-3"></i>
+                    <h3 class="font-semibold text-gray-200">Research Data Management</h3>
+                </div>
+            </div>-->
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <div class="glass-card rounded-xl tilt-card reveal p-6 text-center group cursor-default">
+                    <div class="relative z-10">
+                        <div class="w-14 h-14 mx-auto mb-4 rounded-xl bg-blue-600/20 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                            <i class="fas fa-brain text-blue-400"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-white">AI in Libraries</h4>
+                        <p class="text-gray-400 text-sm mt-2">Exploring machine learning and AI applications for library automation and user services.</p>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-xl tilt-card reveal p-6 text-center group cursor-default" style="transition-delay: 0.1s;">
+                    <div class="relative z-10">
+                        <div class="w-14 h-14 mx-auto mb-4 rounded-xl bg-purple-600/20 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                            <i class="fas fa-laptop text-purple-400"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-white">Digital Libraries</h4>
+                        <p class="text-gray-400 text-sm mt-2">Design and development of digital library systems for enhanced information access.</p>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-xl tilt-card reveal p-6 text-center group cursor-default" style="transition-delay: 0.2s;">
+                    <div class="relative z-10">
+                        <div class="w-14 h-14 mx-auto mb-4 rounded-xl bg-cyan-600/20 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                            <i class="fas fa-search text-cyan-400"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-white">Information Retrieval</h4>
+                        <p class="text-gray-400 text-sm mt-2">Advanced search algorithms and retrieval systems for academic and library contexts.</p>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-xl tilt-card reveal p-6 text-center group cursor-default" style="transition-delay: 0.3s;">
+                    <div class="relative z-10">
+                        <div class="w-14 h-14 mx-auto mb-4 rounded-xl bg-pink-600/20 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                            <i class="fas fa-paper-plane text-pink-400"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-white">Scholarly Communication</h4>
+                        <p class="text-gray-400 text-sm mt-2">Studying the evolving landscape of academic publishing and open access movements.</p>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-xl tilt-card reveal p-6 text-center group cursor-default" style="transition-delay: 0.4s;">
+                    <div class="relative z-10">
+                        <div class="w-14 h-14 mx-auto mb-4 rounded-xl bg-green-600/20 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                            <i class="fas fa-chart-bar text-green-400"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-white">Bibliometrics</h4>
+                        <p class="text-gray-400 text-sm mt-2">Quantitative analysis of academic literature, citation patterns, and research impact metrics.</p>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-xl tilt-card reveal p-6 text-center group cursor-default" style="transition-delay: 0.5s;">
+                    <div class="relative z-10">
+                        <div class="w-14 h-14 mx-auto mb-4 rounded-xl bg-orange-600/20 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                            <i class="fas fa-database text-orange-400"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-white">Data Analysis using R</h4>
+                        <p class="text-gray-400 text-sm mt-2">Quantitative methods for analyzing research data using the R programming language.</p>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+    </section>
+
+    <section id="experience" class="py-24 relative z-10 bg-navy-900/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Experience & <span class="gradient-text">Achievements</span></h2>
+                <div class="h-[2px] w-40 bg-gradient-to-r from-accent-blue via-accent-purple to-accent-blue mx-auto rounded-full moving-gradient-line"></div>
+                <p class="text-gray-400 mt-4">Milestones, awards, and professional development.</p>
+            </div>
+
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+                <div class="glass-card rounded-xl tilt-card reveal p-6 text-center group cursor-default">
+                    <i class="fas fa-trophy text-3xl text-yellow-400 mb-4 group-hover:scale-110 transition-transform inline-block"></i>
+                    <h4 class="text-lg font-bold text-white mb-2">Academic Excellence</h4>
+                    <p class="text-gray-400 text-sm">Consistent academic performance throughout B.Tech and MLISc programs.</p>
+                </div>
+                <div class="glass-card rounded-xl tilt-card reveal p-6 text-center group cursor-default" style="transition-delay: 0.1s;">
+                    <i class="fas fa-award text-3xl text-blue-400 mb-4 group-hover:scale-110 transition-transform inline-block"></i>
+                    <h4 class="text-lg font-bold text-white mb-2">Awards & Honors</h4>
+                    <p class="text-gray-400 text-sm">Recipient of Junior Research Fellowship(JRF)(AIR-3/2024) and Gold Medalist at Gauhati University.</p>
+                </div>
+                <div class="glass-card rounded-xl tilt-card reveal p-6 text-center group cursor-default" style="transition-delay: 0.2s;">
+                    <i class="fas fa-certificate text-3xl text-purple-400 mb-4 group-hover:scale-110 transition-transform inline-block"></i>
+                    <h4 class="text-lg font-bold text-white mb-2">Certifications</h4>
+                    <p class="text-gray-400 text-sm">Certified in Web Development, R Programming, and Research Methodology.</p>
+                </div>
+                <div class="glass-card rounded-xl tilt-card reveal p-6 text-center group cursor-default" style="transition-delay: 0.3s;">
+                    <i class="fas fa-chalkboard-teacher text-3xl text-cyan-400 mb-4 group-hover:scale-110 transition-transform inline-block"></i>
+                    <h4 class="text-lg font-bold text-white mb-2">Workshops</h4>
+                    <p class="text-gray-400 text-sm">Attended INFLIBNET workshop on Soul 3.0 and DSpace.</p>
+                </div>
+                <div class="glass-card rounded-xl tilt-card reveal p-6 text-center group cursor-default sm:col-span-2 lg:col-span-2" style="transition-delay: 0.4s;">
+                    <i class="fas fa-users text-3xl text-green-400 mb-4 group-hover:scale-110 transition-transform inline-block"></i>
+                    <h4 class="text-lg font-bold text-white mb-2">Conferences/Seminars Attended</h4>
+                    <p class="text-gray-400 text-sm">Attended 69th ILA Conference and multiple seminars.</p>
+                </div>
+                <div class="glass-card rounded-xl tilt-card reveal p-6 text-center group cursor-default sm:col-span-2 lg:col-span-2" style="transition-delay: 0.5s;">
+                    <i class="fas fa-handshake text-3xl text-pink-400 mb-4 group-hover:scale-110 transition-transform inline-block"></i>
+                    <h4 class="text-lg font-bold text-white mb-2">Collaborations</h4>
+                    <p class="text-gray-400 text-sm">Collaborated with faculty members and peers on research papers.</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="py-24 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Get in <span class="gradient-text">Touch</span></h2>
+                <div class="h-[2px] w-40 bg-gradient-to-r from-accent-blue via-accent-purple to-accent-blue mx-auto rounded-full moving-gradient-line"></div>
+                
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div class="space-y-6 reveal">
+                    <h3 class="text-2xl font-bold text-white mb-6">Let's Connect</h3>
+                    <p class="text-gray-400 mb-8 leading-relaxed">Whether you want to discuss research collaborations, web development opportunities, or just say hi, feel free to reach out.</p>
+                    
+                    <a href="#" class="flex items-center gap-4 p-4 glass-card rounded-xl hover:border-accent-blue/50 transition-colors">
+                        <div class="w-12 h-12 bg-blue-500/10 rounded-full flex items-center justify-center text-accent-blue text-xl"><i class="fa-solid fa-envelope"></i></div>
+                        <div>
+                            <h4 class="text-white font-medium">Email</h4>
+                            <p class="text-sm text-gray-400">kkhanikar@gauhati.ac.in</p>
+                        </div>
+                    </a>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <a href="www.linkedin.com/in/kaustav-kumar-khanikar" class="flex items-center gap-3 p-4 glass-card rounded-xl hover:border-accent-purple/50 transition-colors">
+                            <i class="fa-brands fa-linkedin text-2xl text-accent-purple"></i> <span class="text-sm text-gray-300">LinkedIn</span>
+                        </a>
+                        <a href="https://github.com/Hungryfoxz" class="flex items-center gap-3 p-4 glass-card rounded-xl hover:border-white/50 transition-colors">
+                            <i class="fa-brands fa-github text-2xl text-white"></i> <span class="text-sm text-gray-300">GitHub</span>
+                        </a>
+                        <a href="https://www.researchgate.net/profile/Kaustav-Khanikar" class="flex items-center gap-3 p-4 glass-card rounded-xl hover:border-accent-cyan/50 transition-colors">
+                            <i class="fa-solid fa-flask text-2xl text-accent-cyan"></i> <span class="text-sm text-gray-300">ResearchGate</span>
+                        </a>
+                        <a href="https://orcid.org/0009-0002-5850-9419" class="flex items-center gap-3 p-4 glass-card rounded-xl hover:border-green-500/50 transition-colors">
+                            <i class="fa-brands fa-orcid text-2xl text-green-400"></i> <span class="text-sm text-gray-300">ORCID</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- <div class="glass-card p-8 rounded-2xl reveal" style="transition-delay: 200ms;">
+                    <form onsubmit="event.preventDefault();" class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-2">Name</label>
+                            <input type="text" placeholder="John Doe" class="w-full px-4 py-3 bg-navy-900/50 border border-gray-700 rounded-lg focus:outline-none focus:border-accent-blue text-white transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-2">Email</label>
+                            <input type="email" placeholder="john@example.com" class="w-full px-4 py-3 bg-navy-900/50 border border-gray-700 rounded-lg focus:outline-none focus:border-accent-blue text-white transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-2">Message</label>
+                            <textarea rows="4" placeholder="Hello..." class="w-full px-4 py-3 bg-navy-900/50 border border-gray-700 rounded-lg focus:outline-none focus:border-accent-blue text-white transition-colors resize-none"></textarea>
+                        </div>
+                        <button type="button" class="w-full py-3 rounded-xl bg-gradient-to-r from-accent-blue to-accent-purple text-white font-bold hover:shadow-[0_0_20px_rgba(139,92,246,0.4)] transition-all">
+                            Send Message
+                        </button>
+                    </form>
+                </div> -->
+
+            <div class="glass-card p-8 rounded-2xl reveal relative overflow-hidden" style="transition-delay: 200ms;">
+        
+                <!-- Contact Form (Visible by default) -->
+                <form id="portfolioContactForm" class="space-y-6 transition-all duration-500 ease-in-out">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-2">Name</label>
+                        <input type="text" id="userName" required placeholder="John Doe" class="w-full px-4 py-3 bg-navy-900/50 border border-gray-700 rounded-lg focus:outline-none focus:border-accent-blue text-white transition-colors">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-2">Email</label>
+                        <input type="email" id="userEmail" required placeholder="john@example.com" class="w-full px-4 py-3 bg-navy-900/50 border border-gray-700 rounded-lg focus:outline-none focus:border-accent-blue text-white transition-colors">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-2">Message</label>
+                        <textarea rows="4" id="userMessage" required placeholder="Hello..." class="w-full px-4 py-3 bg-navy-900/50 border border-gray-700 rounded-lg focus:outline-none focus:border-accent-blue text-white transition-colors resize-none"></textarea>
+                    </div>
+                    <button type="submit" id="submitBtn" class="w-full py-3 rounded-xl bg-gradient-to-r from-accent-blue to-accent-purple text-white font-bold hover:shadow-[0_0_20px_rgba(139,92,246,0.4)] transition-all flex items-center justify-center space-x-2">
+                        <span id="btnText">Send Message</span>
+                    </button>
+                </form>
+
+                <!-- Animated Success Alert Layer (Hidden by default) -->
+                <div id="successAlert" class="hidden absolute inset-0 bg-navy-950/95 flex flex-col items-center justify-center text-center p-6 opacity-0 scale-95 transition-all duration-500 ease-out">
+                    <!-- Glowing Checkmark Icon Container -->
+                    <div class="w-16 h-16 bg-green-500/10 border border-green-500/30 rounded-full flex items-center justify-center mb-4 shadow-[0_0_30px_rgba(34,197,94,0.2)] animate-bounce">
+                        <svg class="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://w3.org">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-2 bg-gradient-to-r from-green-400 to-accent-blue bg-clip-text text-transparent">Message Sent!</h3>
+                    <p class="text-gray-400 text-sm max-w-sm mb-6">Thank you for reaching out. I've received your email and will get back to you shortly.</p>
+                    <button type="button" id="resetFormBtn" class="px-6 py-2 rounded-lg border border-gray-700 text-sm text-gray-300 hover:text-white hover:border-gray-500 transition-colors">
+                        Send Another Message
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <footer class="border-t border-white/10 bg-navy-900 relative z-10 py-12 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center">
+            
+            <div class="flex space-x-6 mb-8 text-2xl">
+                <a href="https://github.com/Hungryfoxz" class="text-gray-400 hover:text-white transition-colors"><i class="fa-brands fa-github"></i></a>
+                <a href="https://www.researchgate.net/profile/Kaustav_Khanikar" class="text-gray-400 hover:text-accent-cyan transition-colors"><i class="fa-solid fa-flask"></i></a>
+                <a href="https://www.orcid.org/0000-0002-1234-5678" class="text-gray-400 hover:text-green-400 transition-colors"><i class="fa-brands fa-orcid"></i></a>
+                <a href="mailto:kkhanikar@gauhati.ac.in" class="text-gray-400 hover:text-red-500 transition-colors"><i class="fa-solid fa-envelope"></i></a>
+                <a href="https://www.linkedin.com/in/kaustav-kumar-khanikar" class="text-gray-400 hover:text-blue-500 transition-colors"><i class="fa-brands fa-linkedin"></i></a>
+                <!-- <a href="#" class="text-gray-400 hover:text-accent-blue transition-colors"><i class="fa-solid fa-graduation-cap"></i></a> -->
+            </div>
+
+            <div class="text-center space-y-2 text-gray-400 text-sm">
+                <p>&copy; 2026 All Rights Reserved</p>
+                <p>Made with <span class="text-red-500">❤️</span> by Kaustav Kumar Khanikar</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+
+
+
+        // 1. Mobile Menu Toggle
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        const bars = document.getElementById('bars');
+        const xmark = document.getElementById('xmark');
+
+        btn.addEventListener('click', () => {
+            // Toggling 'translate-x-full' moves the element between off-screen right and on-screen position
+            menu.classList.toggle('translate-x-full');
+            bars.classList.toggle('hidden');
+            xmark.classList.toggle('hidden');
+            xmark.classList.toggle('flex');
+        });
+
+        // Optional: Close menu smoothly when a link inside it is clicked
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (!menu.classList.contains('translate-x-full')) {
+                    menu.classList.add('translate-x-full');
+                }
+            });
+        });
+
+
+
+
+        // 2. Navbar Scroll Effect (Transparency)
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('shadow-lg', 'bg-navy-900/90');
+                navbar.classList.remove('py-4');
+                navbar.classList.add('py-2');
+            } else {
+                navbar.classList.remove('shadow-lg', 'bg-navy-900/90');
+                navbar.classList.remove('py-2');
+                navbar.classList.add('py-4');
+            }
+        });
+
+        // 3. Scroll Reveal Animation using Intersection Observer
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealOptions = {
+            threshold: 0.1,
+            rootMargin: "0px 0px -50px 0px"
+        };
+        
+        const revealObserver = new IntersectionObserver(function(entries, observer) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target); // Reveal only once
+                }
+            });
+        }, revealOptions);
+
+        revealElements.forEach(el => {
+            revealObserver.observe(el);
+        });
+
+        // 4. 3D Tilt Effect on Cards (Vanilla JS)
+        const tiltCards = document.querySelectorAll('.tilt-card');
+        
+        tiltCards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = ((y - centerY) / centerY) * -10; // Max rotation 10deg
+                const rotateY = ((x - centerX) / centerX) * 10;
+                
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+                card.style.transition = 'none';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+                card.style.transition = 'transform 0.5s ease';
+            });
+        });
+
+        // // 5. Canvas Floating Particles Background
+        // const canvas = document.getElementById('particle-canvas');
+        // const ctx = canvas.getContext('2d');
+        
+        // let width, height;
+        // let particles = [];
+        
+        // function initCanvas() {
+        //     width = canvas.width = window.innerWidth;
+        //     height = canvas.height = window.innerHeight;
+        // }
+
+        // class Particle {
+        //     constructor() {
+        //         this.x = Math.random() * width;
+        //         this.y = Math.random() * height;
+        //         this.vx = (Math.random() - 0.5) * 0.5;
+        //         this.vy = (Math.random() - 0.5) * 0.5;
+        //         this.radius = Math.random() * 2;
+        //     }
+        //     update() {
+        //         this.x += this.vx;
+        //         this.y += this.vy;
+                
+        //         if (this.x < 0 || this.x > width) this.vx *= -1;
+        //         if (this.y < 0 || this.y > height) this.vy *= -1;
+        //     }
+        //     draw() {
+        //         ctx.beginPath();
+        //         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        //         ctx.fillStyle = 'rgba(139, 92, 246, 0.5)';
+        //         ctx.fill();
+        //     }
+        // }
+
+        // function createParticles() {
+        //     particles = [];
+        //     let numParticles = Math.min(Math.floor(window.innerWidth / 15), 100);
+        //     for (let i = 0; i < numParticles; i++) {
+        //         particles.push(new Particle());
+        //     }
+        // }
+
+        // function animateParticles() {
+        //     ctx.clearRect(0, 0, width, height);
+            
+        //     for (let i = 0; i < particles.length; i++) {
+        //         particles[i].update();
+        //         particles[i].draw();
+                
+        //         // Draw connecting lines
+        //         for (let j = i; j < particles.length; j++) {
+        //             let dx = particles[i].x - particles[j].x;
+        //             let dy = particles[i].y - particles[j].y;
+        //             let distance = Math.sqrt(dx * dx + dy * dy);
+                    
+        //             if (distance < 120) {
+        //                 ctx.beginPath();
+        //                 ctx.strokeStyle = `rgba(59, 130, 246, ${0.15 - distance/800})`;
+        //                 ctx.lineWidth = 1;
+        //                 ctx.moveTo(particles[i].x, particles[i].y);
+        //                 ctx.lineTo(particles[j].x, particles[j].y);
+        //                 ctx.stroke();
+        //             }
+        //         }
+        //     }
+        //     requestAnimationFrame(animateParticles);
+        // }
+
+        // window.addEventListener('resize', () => {
+        //     initCanvas();
+        //     createParticles();
+        // });
+
+        // // Initialize background
+        // initCanvas();
+        // createParticles();
+        // animateParticles();
+
+         // Mouse Move Interactive 3D Perspective Twist on Hero Window
+        const heroBox = document.getElementById('hero-3d-box');
+        if (window.innerWidth > 1024) {
+            document.addEventListener('mousemove', (e) => {
+                const xAxis = (window.innerWidth / 2 - e.pageX) / 45;
+                const yAxis = (window.innerHeight / 2 - e.pageY) / 45;
+                heroBox.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+            });
+        }
+
+        // --- THREE.JS IMPLEMENTATION ---
+        
+        // 1. Interactive 3D Geometric Floating Nodes Background Loop
+        const bgCanvas = document.getElementById('bg-3d-canvas');
+        const bgScene = new THREE.Scene();
+        const bgCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const bgRenderer = new THREE.WebGLRenderer({ canvas: bgCanvas, alpha: true, antialias: true });
+        bgRenderer.setSize(window.innerWidth, window.innerHeight);
+        bgRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        // Create particles network layout
+        const particlesGeometry = new THREE.BufferGeometry();
+        const count = 75;
+        const positions = new Float32Array(count * 3);
+
+        for(let i=0; i < count * 3; i++) {
+            positions[i] = (Math.random() - 0.5) * 12;
+        }
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        const particlesMaterial = new THREE.PointsMaterial({
+            size: 0.06,
+            color: 0x6366f1,
+            transparent: true,
+            opacity: 0.8
+        });
+        const pointCloud = new THREE.Points(particlesGeometry, particlesMaterial);
+        bgScene.add(pointCloud);
+        bgCamera.position.z = 5;
+
+        // 2. Localized Hero Element: 3D Torus Knot Network (Symbolizing complex web/information linkages)
+        const container = document.getElementById('hero-3d-canvas-container');
+        const heroScene = new THREE.Scene();
+        const heroCamera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 100);
+        const heroRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        heroRenderer.setSize(container.clientWidth, container.clientHeight);
+        heroRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        container.appendChild(heroRenderer.domElement);
+
+        // Add 3D Wireframe Mesh Shape object
+        const geometry = new THREE.TorusKnotGeometry(0.7, 0.22, 120, 16);
+        const material = new THREE.MeshBasicMaterial({
+            color: 0x818cf8,
+            wireframe: true,
+            transparent: true,
+            opacity: 0.85
+        });
+        const knot = new THREE.Mesh(geometry, material);
+        heroScene.add(knot);
+        heroCamera.position.z = 3.5;
+
+        // Unified Rendering Animation Frame Loop
+        const clock = new THREE.Clock();
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const elapsedTime = clock.getElapsedTime();
+
+            // Rotate background node ecosystem gently
+            pointCloud.rotation.y = elapsedTime * 0.03;
+            pointCloud.rotation.x = elapsedTime * 0.01;
+
+            // Spin the beautiful main Hero Mesh Structure
+            knot.rotation.x = elapsedTime * 0.3;
+            knot.rotation.y = elapsedTime * 0.45;
+
+            bgRenderer.render(bgScene, bgCamera);
+            heroRenderer.render(heroScene, heroCamera);
+        }
+        animate();
+
+        // Dynamically Handle Viewport Window Resizing
+        window.addEventListener('resize', () => {
+            // Update Background Dimensions
+            bgCamera.aspect = window.innerWidth / window.innerHeight;
+            bgCamera.updateProjectionMatrix();
+            bgRenderer.setSize(window.innerWidth, window.innerHeight);
+
+            // Update Hero Elements Box dimensions
+            heroCamera.aspect = container.clientWidth / container.clientHeight;
+            heroCamera.updateProjectionMatrix();
+            heroRenderer.setSize(container.clientWidth, container.clientHeight);
+        });
+
+
+
+        // Form Submission Logic with Google Apps Script Web App Endpoint...
+        document.getElementById('portfolioContactForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwv5kSYut3kxY0zyZBhMOy1utS7eU83D1Tl809NOQxmyQ4roG-xVUBfK26VNoA12uLGIw/exec';
+        const form = document.getElementById('portfolioContactForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const btnText = document.getElementById('btnText');
+        const successAlert = document.getElementById('successAlert');
+        
+        // UI Feedback: Loading State
+        btnText.innerText = 'Sending...';
+        submitBtn.disabled = true;
+        submitBtn.style.opacity = '0.7';
+
+        const formData = {
+            name: document.getElementById('userName').value,
+            email: document.getElementById('userEmail').value,
+            message: document.getElementById('userMessage').value
+        };
+
+        fetch(scriptURL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
+        })
+        .then(() => {
+            // UI Feedback: Fade form out and fade success alert in
+            form.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+            
+            setTimeout(() => {
+                form.classList.add('hidden');
+                successAlert.classList.remove('hidden');
+                
+                // Trigger reflow to let CSS register the removal of 'hidden'
+                void successAlert.offsetWidth; 
+                
+                successAlert.classList.remove('opacity-0', 'scale-95');
+                successAlert.classList.add('opacity-100', 'scale-100');
+            }, 300);
+
+            form.reset();
+        })
+        .catch(error => {
+            console.error('Error!', error.message);
+            alert('Something went wrong. Please check your network connection.');
+        })
+        .finally(() => {
+            // Reset primary submit button template configurations
+            btnText.innerText = 'Send Message';
+            submitBtn.disabled = false;
+            submitBtn.style.opacity = '1';
+        });
+    });
+
+    // Reset logic to switch screens back from Success Screen to Empty Input Form
+    document.getElementById('resetFormBtn').addEventListener('click', function() {
+        const form = document.getElementById('portfolioContactForm');
+        const successAlert = document.getElementById('successAlert');
+
+        successAlert.classList.add('opacity-0', 'scale-95');
+        
+        setTimeout(() => {
+            successAlert.classList.add('hidden');
+            form.classList.remove('hidden');
+            
+            void form.offsetWidth;
+            
+            form.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
+            form.classList.add('opacity-100', 'scale-100');
+        }, 300);
+    });
+
+    </script>
+</body>
+</html>
