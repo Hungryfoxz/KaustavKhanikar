@@ -1184,7 +1184,7 @@
 <!-- ########################################################################################################################## -->
 
     
-    <script>
+<script>
 
     // ====================== MOBILE MENU ======================
     const btn = document.getElementById('mobile-menu-btn');
@@ -1200,9 +1200,7 @@
 
     document.querySelectorAll('#mobile-menu a').forEach(link => {
         link.addEventListener('click', () => {
-            if (!menu.classList.contains('translate-x-full')) {
-                menu.classList.add('translate-x-full');
-            }
+            menu.classList.add('translate-x-full');
         });
     });
 
@@ -1214,8 +1212,7 @@
             navbar.classList.remove('py-4');
             navbar.classList.add('py-2');
         } else {
-            navbar.classList.remove('shadow-lg', 'bg-navy-900/90');
-            navbar.classList.remove('py-2');
+            navbar.classList.remove('shadow-lg', 'bg-navy-900/90', 'py-2');
             navbar.classList.add('py-4');
         }
     });
@@ -1226,54 +1223,23 @@
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('active');
-                revealObserver.unobserve(entry.target);
             }
         });
-    }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+    }, { threshold: 0.1 });
 
     revealElements.forEach(el => revealObserver.observe(el));
 
-    // ====================== 3D TILT CARDS (Desktop only) ======================
-    const tiltCards = document.querySelectorAll('.tilt-card');
-    if (window.innerWidth > 1024) {
-        tiltCards.forEach(card => {
-            card.addEventListener('mousemove', (e) => {
-                const rect = card.getBoundingClientRect();
-                const x = (e.clientX - rect.left) / rect.width;
-                const y = (e.clientY - rect.top) / rect.height;
-                
-                const rotateX = (y - 0.5) * -15;
-                const rotateY = (x - 0.5) * 15;
-                
-                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-            });
-            
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg)`;
-            });
-        });
-    }
-
-    // ====================== HERO 3D MOUSE TILT ======================
-    const heroBox = document.getElementById('hero-3d-box');
-    if (window.innerWidth > 1024) {
-        document.addEventListener('mousemove', (e) => {
-            const xAxis = (window.innerWidth / 2 - e.pageX) / 50;
-            const yAxis = (window.innerHeight / 2 - e.pageY) / 50;
-            heroBox.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
-        });
-    }
-
-    // ====================== THREE.JS SETUP WITH MOBILE FIXES ======================
+    // ====================== THREE.JS SETUP ======================
     let bgRenderer, heroRenderer, pointCloud, knot;
+    let bgScene, bgCamera, heroScene, heroCamera;
     let clock = new THREE.Clock();
     let isVisible = true;
 
     function initThreeJS() {
-        // Background Canvas
+        // === Background 3D ===
         const bgCanvas = document.getElementById('bg-3d-canvas');
-        const bgScene = new THREE.Scene();
-        const bgCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        bgScene = new THREE.Scene();
+        bgCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         
         bgRenderer = new THREE.WebGLRenderer({ 
             canvas: bgCanvas, 
@@ -1282,32 +1248,32 @@
             powerPreference: "low-power"
         });
         bgRenderer.setSize(window.innerWidth, window.innerHeight);
-        bgRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        bgRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
 
-        // Particles - Reduced for mobile
-        const particleCount = window.innerWidth < 768 ? 45 : 75;
+        // Particles (lighter on mobile)
+        const particleCount = window.innerWidth < 768 ? 40 : 70;
         const positions = new Float32Array(particleCount * 3);
         for (let i = 0; i < particleCount * 3; i++) {
-            positions[i] = (Math.random() - 0.5) * 12;
+            positions[i] = (Math.random() - 0.5) * 14;
         }
         const particlesGeometry = new THREE.BufferGeometry();
         particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 
         const particlesMaterial = new THREE.PointsMaterial({
-            size: 0.05,
+            size: 0.055,
             color: 0x6366f1,
             transparent: true,
-            opacity: 0.75
+            opacity: 0.7
         });
 
         pointCloud = new THREE.Points(particlesGeometry, particlesMaterial);
         bgScene.add(pointCloud);
         bgCamera.position.z = 5;
 
-        // Hero 3D Canvas
+        // === Hero 3D ===
         const container = document.getElementById('hero-3d-canvas-container');
-        const heroScene = new THREE.Scene();
-        const heroCamera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 100);
+        heroScene = new THREE.Scene();
+        heroCamera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 100);
         
         heroRenderer = new THREE.WebGLRenderer({ 
             alpha: true, 
@@ -1315,30 +1281,27 @@
             powerPreference: "low-power"
         });
         heroRenderer.setSize(container.clientWidth, container.clientHeight);
-        heroRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        heroRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
         container.appendChild(heroRenderer.domElement);
 
-        // Lighter Torus Knot for mobile
-        const knotSegments = window.innerWidth < 768 ? 64 : 120;
-        const geometry = new THREE.TorusKnotGeometry(0.7, 0.22, knotSegments, 8);
+        // Lighter TorusKnot
+        const segments = window.innerWidth < 768 ? 60 : 110;
+        const geometry = new THREE.TorusKnotGeometry(0.7, 0.22, segments, 8);
         const material = new THREE.MeshBasicMaterial({
             color: 0x818cf8,
             wireframe: true,
             transparent: true,
-            opacity: 0.85
+            opacity: 0.82
         });
         knot = new THREE.Mesh(geometry, material);
         heroScene.add(knot);
         heroCamera.position.z = 3.5;
 
-        // Context Loss Handling
+        // Context Lost Handling
         [bgRenderer.domElement, heroRenderer.domElement].forEach(canvas => {
             canvas.addEventListener('webglcontextlost', (e) => {
                 e.preventDefault();
-                console.warn('WebGL Context Lost - Mobile memory optimization triggered');
-            });
-            canvas.addEventListener('webglcontextrestored', () => {
-                console.log('WebGL Context Restored');
+                console.warn('⚠️ WebGL Context Lost');
             });
         });
     }
@@ -1352,20 +1315,17 @@
         const elapsed = clock.getElapsedTime();
 
         if (pointCloud) {
-            pointCloud.rotation.y = elapsed * 0.02;
-            pointCloud.rotation.x = elapsed * 0.008;
+            pointCloud.rotation.y = elapsed * 0.025;
+            pointCloud.rotation.x = elapsed * 0.01;
         }
         if (knot) {
-            knot.rotation.x = elapsed * 0.25;
-            knot.rotation.y = elapsed * 0.35;
+            knot.rotation.x = elapsed * 0.22;
+            knot.rotation.y = elapsed * 0.38;
         }
 
-        if (bgRenderer) bgRenderer.render(bgScene, bgCamera);  // Note: bgScene & bgCamera need to be accessible
-        if (heroRenderer) heroRenderer.render(heroScene, heroCamera);
+        if (bgRenderer && bgScene && bgCamera) bgRenderer.render(bgScene, bgCamera);
+        if (heroRenderer && heroScene && heroCamera) heroRenderer.render(heroScene, heroCamera);
     }
-
-    // Make variables accessible (better practice)
-    let bgScene, bgCamera, heroScene, heroCamera;
 
     // ====================== VISIBILITY & RESIZE ======================
     document.addEventListener('visibilitychange', () => {
@@ -1386,6 +1346,16 @@
         }
     });
 
+    // ====================== MOUSE TILT (Desktop) ======================
+    const heroBox = document.getElementById('hero-3d-box');
+    if (window.innerWidth > 1024) {
+        document.addEventListener('mousemove', (e) => {
+            const x = (window.innerWidth / 2 - e.pageX) / 45;
+            const y = (window.innerHeight / 2 - e.pageY) / 45;
+            heroBox.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
+        });
+    }
+
     // ====================== INITIALIZE ======================
     initThreeJS();
     animate();
@@ -1393,7 +1363,6 @@
     // ====================== CONTACT FORM ======================
     document.getElementById('portfolioContactForm').addEventListener('submit', function(event) {
         event.preventDefault();
-
         const scriptURL = 'https://script.google.com/macros/s/AKfycbwv5kSYut3kxY0zyZBhMOy1utS7eU83D1Tl809NOQxmyQ4roG-xVUBfK26VNoA12uLGIw/exec';
         const form = document.getElementById('portfolioContactForm');
         const submitBtn = document.getElementById('submitBtn');
@@ -1404,31 +1373,26 @@
         submitBtn.disabled = true;
         submitBtn.style.opacity = '0.7';
 
-        const formData = {
-            name: document.getElementById('userName').value,
-            email: document.getElementById('userEmail').value,
-            message: document.getElementById('userMessage').value
-        };
-
         fetch(scriptURL, {
             method: 'POST',
             mode: 'no-cors',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(formData)
+            body: JSON.stringify({
+                name: document.getElementById('userName').value,
+                email: document.getElementById('userEmail').value,
+                message: document.getElementById('userMessage').value
+            })
         })
         .then(() => {
             form.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
             setTimeout(() => {
                 form.classList.add('hidden');
                 successAlert.classList.remove('hidden');
-                void successAlert.offsetWidth;
                 successAlert.classList.add('opacity-100', 'scale-100');
             }, 300);
             form.reset();
         })
-        .catch(() => {
-            alert('Something went wrong. Please try again.');
-        })
+        .catch(() => alert('Failed to send message. Please try again.'))
         .finally(() => {
             btnText.innerText = 'Send Message';
             submitBtn.disabled = false;
@@ -1436,16 +1400,15 @@
         });
     });
 
-    document.getElementById('resetFormBtn').addEventListener('click', function() {
+    // Reset form
+    document.getElementById('resetFormBtn').addEventListener('click', () => {
         const form = document.getElementById('portfolioContactForm');
         const successAlert = document.getElementById('successAlert');
-
+        
         successAlert.classList.add('opacity-0', 'scale-95');
         setTimeout(() => {
             successAlert.classList.add('hidden');
-            form.classList.remove('hidden');
-            void form.offsetWidth;
-            form.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
+            form.classList.remove('hidden', 'opacity-0', 'scale-95', 'pointer-events-none');
         }, 300);
     });
 
