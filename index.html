@@ -169,6 +169,8 @@
         }
     </style>
 </head>
+
+    
 <body class="antialiased selection:bg-accent-purple selection:text-white relative">
     <canvas id="bg-3d-canvas" class="fixed top-0 left-0 w-full h-full -z-10 pointer-events-none opacity-40"></canvas>
     <!-- <canvas id="particle-canvas" class="fixed inset-0 z-[-1] pointer-events-none opacity-40"></canvas> -->
@@ -208,7 +210,11 @@
         </div>
     </nav>
 
+<!-- ########################################################################################################################## -->
+<!-- _______________________________________________________   Home   _________________________________________________________ -->
+<!-- ########################################################################################################################## -->
 
+    
     <section id="home" class="relative min-h-screen flex items-center justify-center pt-20 pb-12 overflow-hidden">
         <!-- Scroll indicator -->
             <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-xs tracking-widest">
@@ -284,7 +290,9 @@
         </div>
     </section>
 
-
+<!-- ########################################################################################################################## -->
+<!-- _______________________________________________________   About   _________________________________________________________ -->
+<!-- ########################################################################################################################## -->
 
     <section id="about" class="py-24 relative z-10 bg-navy-900/50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -325,7 +333,9 @@
         </div>
     </section>
 
-
+<!-- ########################################################################################################################## -->
+<!-- _______________________________________________________  Education  ______________________________________________________ -->
+<!-- ########################################################################################################################## -->
 
     <section id="education" class="py-24 relative z-10">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -426,7 +436,9 @@
         </div>
     </section>
 
-
+<!-- ########################################################################################################################## -->
+<!-- _______________________________________________________   Skills   _______________________________________________________ -->
+<!-- ########################################################################################################################## -->
 
     <section id="skills" class="py-24 relative z-10 bg-navy-900/50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -505,7 +517,9 @@
         </div>
     </section>
 
-
+<!-- ########################################################################################################################## -->
+<!-- _____________________________________________________   Projects   _______________________________________________________ -->
+<!-- ########################################################################################################################## -->
 
     <section id="projects" class="py-24 relative z-10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -540,7 +554,7 @@
                         </a>
                     </div>
                     <h3 class="text-xl font-bold text-white mb-2 group-hover:text-indigo-300 transition-colors">Department Representative Selection Portal</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed mb-4">A custom web portal engineered to hold election for the selection of departmental representatives, developed in 2024. Hosted with Nginx.</p>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">A custom web portal engineered to hold election for the selection of departmental representatives, developed in 2024. Hosted with Ngrok.</p>
                 </div>
                 <div class="flex flex-wrap gap-2 pt-4 border-t border-gray-800/60">
                     <span class="text-xs bg-gray-800 text-indigo-300 px-2 py-1 rounded">Django</span>
@@ -700,6 +714,12 @@
         </div>
     </section>
 
+
+<!-- ########################################################################################################################## -->
+<!-- ____________________________________________________   Research   ________________________________________________________ -->
+<!-- ########################################################################################################################## -->
+
+    
     <!--<section id="research" class="py-24 relative z-10 bg-navy-900/50">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16 reveal">
@@ -770,7 +790,10 @@
         </div>
     </section> -->
 
-
+<!-- ########################################################################################################################## -->
+<!-- ______________________________________________________   Research   ______________________________________________________ -->
+<!-- ########################################################################################################################## -->
+    
     <!-- <section id="research" class="relative py-20 lg:py-28">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16 reveal">
@@ -863,6 +886,10 @@
     </section> -->
 
 
+<!-- ########################################################################################################################## -->
+<!-- __________________________________________________  Research Interest   __________________________________________________ -->
+<!-- ########################################################################################################################## -->
+    
     <section class="py-24 relative z-10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16 reveal">
@@ -965,6 +992,12 @@
         </div>
     </section>
 
+
+<!-- ########################################################################################################################## -->
+<!-- ___________________________________________________  Experience   ________________________________________________________ -->
+<!-- ########################################################################################################################## -->
+
+    
     <section id="experience" class="py-24 relative z-10 bg-navy-900/50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16 reveal">
@@ -1011,6 +1044,12 @@
         </div>
     </section>
 
+    
+<!-- ########################################################################################################################## -->
+<!-- _______________________________________________________   Contact   ______________________________________________________ -->
+<!-- ########################################################################################################################## -->
+
+    
     <section id="contact" class="py-24 relative z-10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16 reveal">
@@ -1109,6 +1148,11 @@
         </div>
     </section>
 
+<!-- ########################################################################################################################## -->
+<!-- ______________________________________________________  Footer   _________________________________________________________ -->
+<!-- ########################################################################################################################## -->
+
+    
     <footer class="border-t border-white/10 bg-navy-900 relative z-10 py-12 mt-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center">
             
@@ -1128,6 +1172,12 @@
         </div>
     </footer>
 
+
+<!-- ########################################################################################################################## -->
+<!-- _______________________________________________________    JS    _________________________________________________________ -->
+<!-- ########################################################################################################################## -->
+
+    
     <script>
 
 
@@ -1196,107 +1246,31 @@
         const tiltCards = document.querySelectorAll('.tilt-card');
         
         tiltCards.forEach(card => {
-            card.addEventListener('mousemove', (e) => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
+            if (window.innerWidth > 1024) {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    
+                    const rotateX = ((y - centerY) / centerY) * -10; // Max rotation 10deg
+                    const rotateY = ((x - centerX) / centerX) * 10;
+                    
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+                    card.style.transition = 'none';
+                });
                 
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                
-                const rotateX = ((y - centerY) / centerY) * -10; // Max rotation 10deg
-                const rotateY = ((x - centerX) / centerX) * 10;
-                
-                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-                card.style.transition = 'none';
-            });
-            
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
-                card.style.transition = 'transform 0.5s ease';
-            });
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+                    card.style.transition = 'transform 0.5s ease';
+                });
+            }   
         });
 
-        // // 5. Canvas Floating Particles Background
-        // const canvas = document.getElementById('particle-canvas');
-        // const ctx = canvas.getContext('2d');
-        
-        // let width, height;
-        // let particles = [];
-        
-        // function initCanvas() {
-        //     width = canvas.width = window.innerWidth;
-        //     height = canvas.height = window.innerHeight;
-        // }
 
-        // class Particle {
-        //     constructor() {
-        //         this.x = Math.random() * width;
-        //         this.y = Math.random() * height;
-        //         this.vx = (Math.random() - 0.5) * 0.5;
-        //         this.vy = (Math.random() - 0.5) * 0.5;
-        //         this.radius = Math.random() * 2;
-        //     }
-        //     update() {
-        //         this.x += this.vx;
-        //         this.y += this.vy;
-                
-        //         if (this.x < 0 || this.x > width) this.vx *= -1;
-        //         if (this.y < 0 || this.y > height) this.vy *= -1;
-        //     }
-        //     draw() {
-        //         ctx.beginPath();
-        //         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        //         ctx.fillStyle = 'rgba(139, 92, 246, 0.5)';
-        //         ctx.fill();
-        //     }
-        // }
-
-        // function createParticles() {
-        //     particles = [];
-        //     let numParticles = Math.min(Math.floor(window.innerWidth / 15), 100);
-        //     for (let i = 0; i < numParticles; i++) {
-        //         particles.push(new Particle());
-        //     }
-        // }
-
-        // function animateParticles() {
-        //     ctx.clearRect(0, 0, width, height);
-            
-        //     for (let i = 0; i < particles.length; i++) {
-        //         particles[i].update();
-        //         particles[i].draw();
-                
-        //         // Draw connecting lines
-        //         for (let j = i; j < particles.length; j++) {
-        //             let dx = particles[i].x - particles[j].x;
-        //             let dy = particles[i].y - particles[j].y;
-        //             let distance = Math.sqrt(dx * dx + dy * dy);
-                    
-        //             if (distance < 120) {
-        //                 ctx.beginPath();
-        //                 ctx.strokeStyle = `rgba(59, 130, 246, ${0.15 - distance/800})`;
-        //                 ctx.lineWidth = 1;
-        //                 ctx.moveTo(particles[i].x, particles[i].y);
-        //                 ctx.lineTo(particles[j].x, particles[j].y);
-        //                 ctx.stroke();
-        //             }
-        //         }
-        //     }
-        //     requestAnimationFrame(animateParticles);
-        // }
-
-        // window.addEventListener('resize', () => {
-        //     initCanvas();
-        //     createParticles();
-        // });
-
-        // // Initialize background
-        // initCanvas();
-        // createParticles();
-        // animateParticles();
-
-         // Mouse Move Interactive 3D Perspective Twist on Hero Window
+         // 5. Mouse Move Interactive 3D Perspective Twist on Hero Window
         const heroBox = document.getElementById('hero-3d-box');
         if (window.innerWidth > 1024) {
             document.addEventListener('mousemove', (e) => {
@@ -1390,8 +1364,9 @@
         });
 
 
-
-        // Form Submission Logic with Google Apps Script Web App Endpoint...
+        // |-------------------------------------------------------------------------------------------|
+        //           Form Submission Logic with Google Apps Script Web App Endpoint
+        // |-------------------------------------------------------------------------------------------|
         document.getElementById('portfolioContactForm').addEventListener('submit', function(event) {
         event.preventDefault();
 
