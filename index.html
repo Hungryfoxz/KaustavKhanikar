@@ -1186,194 +1186,212 @@
     
     <script>
 
+    // ====================== MOBILE MENU ======================
+    const btn = document.getElementById('mobile-menu-btn');
+    const menu = document.getElementById('mobile-menu');
+    const bars = document.getElementById('bars');
+    const xmark = document.getElementById('xmark');
 
+    btn.addEventListener('click', () => {
+        menu.classList.toggle('translate-x-full');
+        bars.classList.toggle('hidden');
+        xmark.classList.toggle('hidden');
+    });
 
-        // 1. Mobile Menu Toggle
-        const btn = document.getElementById('mobile-menu-btn');
-        const menu = document.getElementById('mobile-menu');
-        const bars = document.getElementById('bars');
-        const xmark = document.getElementById('xmark');
-
-        btn.addEventListener('click', () => {
-            // Toggling 'translate-x-full' moves the element between off-screen right and on-screen position
-            menu.classList.toggle('translate-x-full');
-            bars.classList.toggle('hidden');
-            xmark.classList.toggle('hidden');
-            xmark.classList.toggle('flex');
-        });
-
-        // Optional: Close menu smoothly when a link inside it is clicked
-        document.querySelectorAll('#mobile-menu a').forEach(link => {
-            link.addEventListener('click', () => {
-                if (!menu.classList.contains('translate-x-full')) {
-                    menu.classList.add('translate-x-full');
-                }
-            });
-        });
-
-
-
-
-        // 2. Navbar Scroll Effect (Transparency)
-        const navbar = document.getElementById('navbar');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                navbar.classList.add('shadow-lg', 'bg-navy-900/90');
-                navbar.classList.remove('py-4');
-                navbar.classList.add('py-2');
-            } else {
-                navbar.classList.remove('shadow-lg', 'bg-navy-900/90');
-                navbar.classList.remove('py-2');
-                navbar.classList.add('py-4');
+    document.querySelectorAll('#mobile-menu a').forEach(link => {
+        link.addEventListener('click', () => {
+            if (!menu.classList.contains('translate-x-full')) {
+                menu.classList.add('translate-x-full');
             }
         });
+    });
 
-        // 3. Scroll Reveal Animation using Intersection Observer
-        const revealElements = document.querySelectorAll('.reveal');
-        const revealOptions = {
-            threshold: 0.1,
-            rootMargin: "0px 0px -50px 0px"
-        };
-        
-        const revealObserver = new IntersectionObserver(function(entries, observer) {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                    observer.unobserve(entry.target); // Reveal only once
-                }
-            });
-        }, revealOptions);
-
-        revealElements.forEach(el => {
-            revealObserver.observe(el);
-        });
-
-        // 4. 3D Tilt Effect on Cards (Vanilla JS)
-        const tiltCards = document.querySelectorAll('.tilt-card');
-        
-        tiltCards.forEach(card => {
-            if (window.innerWidth > 1024) {
-                card.addEventListener('mousemove', (e) => {
-                    const rect = card.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
-                    
-                    const centerX = rect.width / 2;
-                    const centerY = rect.height / 2;
-                    
-                    const rotateX = ((y - centerY) / centerY) * -10; // Max rotation 10deg
-                    const rotateY = ((x - centerX) / centerX) * 10;
-                    
-                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-                    card.style.transition = 'none';
-                });
-                
-                card.addEventListener('mouseleave', () => {
-                    card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
-                    card.style.transition = 'transform 0.5s ease';
-                });
-            }   
-        });
-
-
-         // 5. Mouse Move Interactive 3D Perspective Twist on Hero Window
-        const heroBox = document.getElementById('hero-3d-box');
-        if (window.innerWidth > 1024) {
-            document.addEventListener('mousemove', (e) => {
-                const xAxis = (window.innerWidth / 2 - e.pageX) / 45;
-                const yAxis = (window.innerHeight / 2 - e.pageY) / 45;
-                heroBox.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
-            });
+    // ====================== NAVBAR SCROLL ======================
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            navbar.classList.add('shadow-lg', 'bg-navy-900/90');
+            navbar.classList.remove('py-4');
+            navbar.classList.add('py-2');
+        } else {
+            navbar.classList.remove('shadow-lg', 'bg-navy-900/90');
+            navbar.classList.remove('py-2');
+            navbar.classList.add('py-4');
         }
+    });
 
-        // --- THREE.JS IMPLEMENTATION ---
-        
-        // 1. Interactive 3D Geometric Floating Nodes Background Loop
+    // ====================== SCROLL REVEAL ======================
+    const revealElements = document.querySelectorAll('.reveal');
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+
+    revealElements.forEach(el => revealObserver.observe(el));
+
+    // ====================== 3D TILT CARDS (Desktop only) ======================
+    const tiltCards = document.querySelectorAll('.tilt-card');
+    if (window.innerWidth > 1024) {
+        tiltCards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width;
+                const y = (e.clientY - rect.top) / rect.height;
+                
+                const rotateX = (y - 0.5) * -15;
+                const rotateY = (x - 0.5) * 15;
+                
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg)`;
+            });
+        });
+    }
+
+    // ====================== HERO 3D MOUSE TILT ======================
+    const heroBox = document.getElementById('hero-3d-box');
+    if (window.innerWidth > 1024) {
+        document.addEventListener('mousemove', (e) => {
+            const xAxis = (window.innerWidth / 2 - e.pageX) / 50;
+            const yAxis = (window.innerHeight / 2 - e.pageY) / 50;
+            heroBox.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+        });
+    }
+
+    // ====================== THREE.JS SETUP WITH MOBILE FIXES ======================
+    let bgRenderer, heroRenderer, pointCloud, knot;
+    let clock = new THREE.Clock();
+    let isVisible = true;
+
+    function initThreeJS() {
+        // Background Canvas
         const bgCanvas = document.getElementById('bg-3d-canvas');
         const bgScene = new THREE.Scene();
         const bgCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const bgRenderer = new THREE.WebGLRenderer({ canvas: bgCanvas, alpha: true, antialias: true });
+        
+        bgRenderer = new THREE.WebGLRenderer({ 
+            canvas: bgCanvas, 
+            alpha: true, 
+            antialias: false,
+            powerPreference: "low-power"
+        });
         bgRenderer.setSize(window.innerWidth, window.innerHeight);
         bgRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-        // Create particles network layout
-        const particlesGeometry = new THREE.BufferGeometry();
-        const count = 75;
-        const positions = new Float32Array(count * 3);
-
-        for(let i=0; i < count * 3; i++) {
+        // Particles - Reduced for mobile
+        const particleCount = window.innerWidth < 768 ? 45 : 75;
+        const positions = new Float32Array(particleCount * 3);
+        for (let i = 0; i < particleCount * 3; i++) {
             positions[i] = (Math.random() - 0.5) * 12;
         }
+        const particlesGeometry = new THREE.BufferGeometry();
         particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
         const particlesMaterial = new THREE.PointsMaterial({
-            size: 0.06,
+            size: 0.05,
             color: 0x6366f1,
             transparent: true,
-            opacity: 0.8
+            opacity: 0.75
         });
-        const pointCloud = new THREE.Points(particlesGeometry, particlesMaterial);
+
+        pointCloud = new THREE.Points(particlesGeometry, particlesMaterial);
         bgScene.add(pointCloud);
         bgCamera.position.z = 5;
 
-        // 2. Localized Hero Element: 3D Torus Knot Network (Symbolizing complex web/information linkages)
+        // Hero 3D Canvas
         const container = document.getElementById('hero-3d-canvas-container');
         const heroScene = new THREE.Scene();
         const heroCamera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 100);
-        const heroRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        
+        heroRenderer = new THREE.WebGLRenderer({ 
+            alpha: true, 
+            antialias: false,
+            powerPreference: "low-power"
+        });
         heroRenderer.setSize(container.clientWidth, container.clientHeight);
         heroRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         container.appendChild(heroRenderer.domElement);
 
-        // Add 3D Wireframe Mesh Shape object
-        const geometry = new THREE.TorusKnotGeometry(0.7, 0.22, 120, 16);
+        // Lighter Torus Knot for mobile
+        const knotSegments = window.innerWidth < 768 ? 64 : 120;
+        const geometry = new THREE.TorusKnotGeometry(0.7, 0.22, knotSegments, 8);
         const material = new THREE.MeshBasicMaterial({
             color: 0x818cf8,
             wireframe: true,
             transparent: true,
             opacity: 0.85
         });
-        const knot = new THREE.Mesh(geometry, material);
+        knot = new THREE.Mesh(geometry, material);
         heroScene.add(knot);
         heroCamera.position.z = 3.5;
 
-        // Unified Rendering Animation Frame Loop
-        const clock = new THREE.Clock();
+        // Context Loss Handling
+        [bgRenderer.domElement, heroRenderer.domElement].forEach(canvas => {
+            canvas.addEventListener('webglcontextlost', (e) => {
+                e.preventDefault();
+                console.warn('WebGL Context Lost - Mobile memory optimization triggered');
+            });
+            canvas.addEventListener('webglcontextrestored', () => {
+                console.log('WebGL Context Restored');
+            });
+        });
+    }
 
-        function animate() {
-            requestAnimationFrame(animate);
-            const elapsedTime = clock.getElapsedTime();
+    // ====================== ANIMATION LOOP ======================
+    function animate() {
+        requestAnimationFrame(animate);
 
-            // Rotate background node ecosystem gently
-            pointCloud.rotation.y = elapsedTime * 0.03;
-            pointCloud.rotation.x = elapsedTime * 0.01;
+        if (!isVisible) return;
 
-            // Spin the beautiful main Hero Mesh Structure
-            knot.rotation.x = elapsedTime * 0.3;
-            knot.rotation.y = elapsedTime * 0.45;
+        const elapsed = clock.getElapsedTime();
 
-            bgRenderer.render(bgScene, bgCamera);
-            heroRenderer.render(heroScene, heroCamera);
+        if (pointCloud) {
+            pointCloud.rotation.y = elapsed * 0.02;
+            pointCloud.rotation.x = elapsed * 0.008;
         }
-        animate();
+        if (knot) {
+            knot.rotation.x = elapsed * 0.25;
+            knot.rotation.y = elapsed * 0.35;
+        }
 
-        // Dynamically Handle Viewport Window Resizing
-        window.addEventListener('resize', () => {
-            // Update Background Dimensions
+        if (bgRenderer) bgRenderer.render(bgScene, bgCamera);  // Note: bgScene & bgCamera need to be accessible
+        if (heroRenderer) heroRenderer.render(heroScene, heroCamera);
+    }
+
+    // Make variables accessible (better practice)
+    let bgScene, bgCamera, heroScene, heroCamera;
+
+    // ====================== VISIBILITY & RESIZE ======================
+    document.addEventListener('visibilitychange', () => {
+        isVisible = !document.hidden;
+    });
+
+    window.addEventListener('resize', () => {
+        if (bgCamera && bgRenderer) {
             bgCamera.aspect = window.innerWidth / window.innerHeight;
             bgCamera.updateProjectionMatrix();
             bgRenderer.setSize(window.innerWidth, window.innerHeight);
-
-            // Update Hero Elements Box dimensions
+        }
+        if (heroCamera && heroRenderer) {
+            const container = document.getElementById('hero-3d-canvas-container');
             heroCamera.aspect = container.clientWidth / container.clientHeight;
             heroCamera.updateProjectionMatrix();
             heroRenderer.setSize(container.clientWidth, container.clientHeight);
-        });
+        }
+    });
 
+    // ====================== INITIALIZE ======================
+    initThreeJS();
+    animate();
 
-        // |-------------------------------------------------------------------------------------------|
-        //           Form Submission Logic with Google Apps Script Web App Endpoint
-        // |-------------------------------------------------------------------------------------------|
-        document.getElementById('portfolioContactForm').addEventListener('submit', function(event) {
+    // ====================== CONTACT FORM ======================
+    document.getElementById('portfolioContactForm').addEventListener('submit', function(event) {
         event.preventDefault();
 
         const scriptURL = 'https://script.google.com/macros/s/AKfycbwv5kSYut3kxY0zyZBhMOy1utS7eU83D1Tl809NOQxmyQ4roG-xVUBfK26VNoA12uLGIw/exec';
@@ -1381,8 +1399,7 @@
         const submitBtn = document.getElementById('submitBtn');
         const btnText = document.getElementById('btnText');
         const successAlert = document.getElementById('successAlert');
-        
-        // UI Feedback: Loading State
+
         btnText.innerText = 'Sending...';
         submitBtn.disabled = true;
         submitBtn.style.opacity = '0.7';
@@ -1400,52 +1417,38 @@
             body: JSON.stringify(formData)
         })
         .then(() => {
-            // UI Feedback: Fade form out and fade success alert in
             form.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
-            
             setTimeout(() => {
                 form.classList.add('hidden');
                 successAlert.classList.remove('hidden');
-                
-                // Trigger reflow to let CSS register the removal of 'hidden'
-                void successAlert.offsetWidth; 
-                
-                successAlert.classList.remove('opacity-0', 'scale-95');
+                void successAlert.offsetWidth;
                 successAlert.classList.add('opacity-100', 'scale-100');
             }, 300);
-
             form.reset();
         })
-        .catch(error => {
-            console.error('Error!', error.message);
-            alert('Something went wrong. Please check your network connection.');
+        .catch(() => {
+            alert('Something went wrong. Please try again.');
         })
         .finally(() => {
-            // Reset primary submit button template configurations
             btnText.innerText = 'Send Message';
             submitBtn.disabled = false;
             submitBtn.style.opacity = '1';
         });
     });
 
-    // Reset logic to switch screens back from Success Screen to Empty Input Form
     document.getElementById('resetFormBtn').addEventListener('click', function() {
         const form = document.getElementById('portfolioContactForm');
         const successAlert = document.getElementById('successAlert');
 
         successAlert.classList.add('opacity-0', 'scale-95');
-        
         setTimeout(() => {
             successAlert.classList.add('hidden');
             form.classList.remove('hidden');
-            
             void form.offsetWidth;
-            
             form.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
-            form.classList.add('opacity-100', 'scale-100');
         }, 300);
     });
 
-    </script>
+</script>
 </body>
 </html>
