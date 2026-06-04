@@ -268,10 +268,10 @@
                     </button>
                     
                     <!-- 2. The Preview Modal Backdrop (Hidden by Default) -->
-                    <div id="previewModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 md:p-6">
+                    <div id="previewModal" class="opacity-0 pointer-events-none fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 md:p-6 transition-all duration-300 ease-out">
                       
                       <!-- 3. The Modal Card Container -->
-                      <div class="bg-white rounded-xl shadow-2xl w-full max-w-4xl h-[85vh] flex flex-col overflow-hidden animate-fade-in">
+                      <div id="modalCard" class="opacity-0 scale-95 transform bg-white rounded-xl shadow-2xl w-full max-w-4xl h-[85vh] flex flex-col overflow-hidden transition-all duration-300 ease-out">
                         
                         <!-- Modal Header -->
                         <div class="flex items-center justify-between p-4 border-b border-slate-200 bg-slate-50">
@@ -1245,29 +1245,45 @@
 
     // ===================== CV Download  =====================
       const modal = document.getElementById('previewModal');
+      const modalCard = document.getElementById('modalCard');
       const openBtn = document.getElementById('openPreviewBtn');
       const closeBtn = document.getElementById('closePreviewBtn');
       const cancelBtn = document.getElementById('cancelModalBtn');
       
-      // REPLACE 'my-cv.pdf' with your file path here too
-      const cvFilePath = '/bucket/Resume_KaustavKrKhanikar_2026.pdf'; 
-
-      // Open Logic with Mobile Guard
+      // Keep your original file link here
+      const cvFilePath = 'my-cv.pdf'; 
+    
+      // Smooth Open Animation
       openBtn.addEventListener('click', () => {
-        // If the device screen is smaller than a tablet (768px), open the PDF natively
         if (window.innerWidth < 768) {
           window.open(cvFilePath, '_blank');
         } else {
-          // Desktop users get the professional modal frame
-          modal.classList.remove('hidden');
           document.body.style.overflow = 'hidden';
+          
+          // 1. Activate the modal container container
+          modal.classList.remove('pointer-events-none');
+          
+          // 2. Trigger the animations via micro-timeout (essential for CSS transitions)
+          setTimeout(() => {
+            modal.classList.add('opacity-100');
+            modalCard.classList.add('opacity-100', 'scale-100');
+            modalCard.classList.remove('opacity-0', 'scale-95');
+          }, 10);
         }
       });
-
-      // Close Logic
+    
+      // Smooth Close Animation
       const closeModal = () => {
-        modal.classList.add('hidden');
-        document.body.style.overflow = '';
+        // 1. Reverse the animations
+        modal.classList.remove('opacity-100');
+        modalCard.classList.remove('opacity-100', 'scale-100');
+        modalCard.classList.add('opacity-0', 'scale-95');
+        
+        // 2. Wait for the 300ms animation to finish before locking pointer events
+        setTimeout(() => {
+          modal.classList.add('pointer-events-none');
+          document.body.style.overflow = '';
+        }, 300); 
       };
     
       closeBtn.addEventListener('click', closeModal);
